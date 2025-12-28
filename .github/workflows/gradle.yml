@@ -120,7 +120,7 @@ jobs:
 
       - name: Restart Test Server
         uses: fjogeleit/http-request-action@v1
-        if: success() && github.event_name == 'push' && github.repository == 'AllayPlus/AllayPlus' && contains(github.ref_name, 'master')
+        if: success() && github.event_name == 'push' && github.repository == 'AllayPlus/AllayPlus' && contains(github.ref_name, 'master') && secrets.TEST_SERVER_HOST != '' && secrets.REMOTE_COMMAND_PORT != '' && secrets.REMOTE_COMMAND_TOKEN != ''
         continue-on-error: true
         with:
           url: 'http://${{ secrets.TEST_SERVER_HOST }}:${{ secrets.REMOTE_COMMAND_PORT }}/remotecommand?token=${{ secrets.REMOTE_COMMAND_TOKEN }}&command=stop'
