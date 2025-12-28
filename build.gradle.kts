@@ -10,7 +10,7 @@ plugins {
 subprojects {
     apply(plugin = "java-library")
 
-    group = "org.allaymc.allay"
+    group = "io.github.allayplus"
 
     tasks {
         withType<JavaCompile>().configureEach {
