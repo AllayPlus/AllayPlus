@@ -5,7 +5,7 @@
 <a href="https://github.com/AllayMC/Allay">
     <img src="docs/assets/logo/allay-chan-640x.png" alt="Logo" width="200" height="200">
 </a>
-<h3 align="center">Allay</h3>
+<h3 align="center">AllayPlus</h3>
 
 The next-generation Minecraft: Bedrock Edition server software aims to be reliable, fast and feature-rich
 
