@@ -98,7 +98,7 @@ jobs:
           git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/AllayPlus/AllayPlus.git -f --follow-tags nightly
 
       - name: Update Nightly Build
-        uses: AllayMC/deploy-nightly@v3.3.0
+        uses: AllayPlus/deploy-nightly@v1
         if: success() && github.event_name == 'push' && github.repository == 'AllayPlus/AllayPlus' && contains(github.ref_name, 'master')
         with:
           upload_url: https://uploads.github.com/repos/AllayPlus/AllayPlus/releases/273093543/assets{?name,label}
