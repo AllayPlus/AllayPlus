@@ -50,11 +50,9 @@ jobs:
       - name: Build
         run: |
           chmod +x gradlew
-          ./gradlew build
-
-      - name: Generate Coverage Reports
-        if: success()
-        run: ./gradlew jacocoTestReport
+          ./gradlew test jacocoTestReport server:shadowJar \
+            -x server:distTar -x server:distZip \
+            -x server:shadowDistTar -x server:shadowDistZip
 
       - name: Upload Coverage Reports to Codecov
         uses: codecov/codecov-action@v5.5.2
