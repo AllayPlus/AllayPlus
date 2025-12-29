@@ -15,7 +15,7 @@ The next-generation Minecraft: Bedrock Edition server software aims to be reliab
 [![api](https://img.shields.io/maven-central/v/org.allaymc.allay/api?label=api)](https://central.sonatype.com/artifact/org.allaymc.allay/api)
 [![server](https://img.shields.io/maven-central/v/org.allaymc.allay/server?label=server)](https://central.sonatype.com/artifact/org.allaymc.allay/server)
 [![codecov](https://codecov.io/gh/AllayMC/Allay/graph/badge.svg?token=EI8EDEKI51)](https://codecov.io/gh/AllayMC/Allay)
-<a href="https://app.codacy.com/gh/AllayMC/Allay/dashboard"><img src="https://app.codacy.com/project/badge/Grade/30e264923da2425a8b777a84b4028334"></a>
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/87c025f71e9549b9a4f2ab36a56b5cf9)](https://app.codacy.com/gh/AllayPlus/AllayPlus/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 <a href="https://discord.gg/ngkkE4hPTU"><img src="https://img.shields.io/discord/1147136608290750526?label=discord&color=7289DA&logo=discord" alt="Discord" /></a>
 [![qq](https://img.shields.io/badge/QQ-1072132791-purple)](https://qm.qq.com/q/peseHA0xN0)
 <a href="https://feedback.minecraft.net/hc/en-us/sections/360001186971-Release-Changelogs"><img src="https://img.shields.io/badge/minecraft-1.21.80 ~ 1.21.130%20(Bedrock)-green" /></a>
