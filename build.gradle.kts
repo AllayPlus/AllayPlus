@@ -94,12 +94,12 @@ subprojects {
                 name.set(project.name)
                 description.set("The next-generation Minecraft: Bedrock Edition server software aims to be reliable, fast and feature-rich.")
                 inceptionYear.set("2023")
-                url.set("https://github.com/AllayMC/Allay")
+                url.set("https://github.com/AllayPlus/AllayPlus")
 
                 scm {
-                    connection.set("scm:git:git://github.com/AllayMC/Allay.git")
-                    developerConnection.set("scm:git:ssh://github.com/AllayMC/Allay.git")
-                    url.set("https://github.com/AllayMC/Allay")
+                    connection.set("scm:git:git://github.com/AllayPlus/AllayPlus.git")
+                    developerConnection.set("scm:git:ssh://github.com/AllayPlus/AllayPlus.git")
+                    url.set("https://github.com/AllayPlus/AllayPlus")
                 }
 
                 licenses {
@@ -111,9 +111,9 @@ subprojects {
 
                 developers {
                     developer {
-                        name.set("AllayMC Team")
-                        organization.set("AllayMC")
-                        organizationUrl.set("https://github.com/AllayMC")
+                        name.set("AllayPlus Team")
+                        organization.set("AllayPlus")
+                        organizationUrl.set("https://github.com/AllayPlus")
                     }
                 }
             }
