@@ -198,6 +198,8 @@ public class AllayPlayer implements Player {
     protected boolean clientCacheEnabled;
     protected boolean shouldSendCommands;
     @Getter
+    @Setter
+    protected boolean containerClosedByClient;
     protected Speed speed, flySpeed, verticalFlySpeed;
 
     // Container
@@ -1663,6 +1665,13 @@ public class AllayPlayer implements Player {
         var packet = new ContainerClosePacket();
         packet.setId(assignedId);
         packet.setType(ContainerNetworkInfo.getInfo(container.getContainerType()).toNetworkType());
+        if (!this.containerClosedByClient) {
+            // Field `serverInitiated` determines whether the server force-closed the container. If this value is
+            // not set correctly, the client may ignore the packet and respond with a `PacketViolationWarningPacket`.
+            packet.setServerInitiated(true);
+        } else {
+            this.containerClosedByClient = false;
+        }
         sendPacket(packet);
     }
 
@@ -2347,6 +2356,21 @@ public class AllayPlayer implements Player {
         entry.setTrustedSkin(AllayServer.getSettings().resourcePackSettings().trustAllSkins());
         entry.setColor(new Color(player.getOriginName().hashCode() & 0xFFFFFF));
         return entry;
+    }
+
+    @Override
+    public Speed getSpeed() {
+        return speed;
+    }
+
+    @Override
+    public Speed getFlySpeed() {
+        return flySpeed;
+    }
+
+    @Override
+    public Speed getVerticalFlySpeed() {
+        return verticalFlySpeed;
     }
 
     @Override
