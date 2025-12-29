@@ -46,6 +46,7 @@ Unless otherwise specified, any version comparison below is the comparison of th
 
 - (API) Fixed method `Container.removeAllViewers()` won't remove all viewers from the container.
 - `RAK_SEND_COOKIE` is set to `true` by default in `AllayNetworkInterface` to resolve connection issue.
+- Fixed sneaking state resolution while flying to prevent incorrect interaction behavior.
 
 ### Removed
 
