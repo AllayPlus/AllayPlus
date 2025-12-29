@@ -17,7 +17,6 @@ The next-generation Minecraft: Bedrock Edition server software aims to be reliab
 [![codecov](https://codecov.io/gh/AllayPlus/AllayPlus/graph/badge.svg?token=TQVZ3XBJXC)](https://codecov.io/gh/AllayPlus/AllayPlus)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/87c025f71e9549b9a4f2ab36a56b5cf9)](https://app.codacy.com/gh/AllayPlus/AllayPlus/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 <a href="https://discord.gg/ngkkE4hPTU"><img src="https://img.shields.io/discord/1147136608290750526?label=discord&color=7289DA&logo=discord" alt="Discord" /></a>
-[![qq](https://img.shields.io/badge/QQ-1072132791-purple)](https://qm.qq.com/q/peseHA0xN0)
 <a href="https://feedback.minecraft.net/hc/en-us/sections/360001186971-Release-Changelogs"><img src="https://img.shields.io/badge/minecraft-1.21.80 ~ 1.21.130%20(Bedrock)-green" /></a>
 [![GitHub License](https://img.shields.io/github/license/allaymc/allay)](LICENSE)
 [![Ko-Fi](https://img.shields.io/badge/Buy_Me_a_Coffee-f37574?logo=kofi&logoColor=white)](https://ko-fi.com/AllayMC)
@@ -47,28 +46,7 @@ Allay is written and running in java 21, so you need to install java 21. There a
 several version of java, and we recommend you to use [GraalVM](https://www.graalvm.org/) for the best performance.
 [OpenJDK](https://adoptopenjdk.net/) is also a good choice if you want to have a stable experience.
 
-After you have installed java 21, there are two ways to install Allay:
-
-### ⚡ Use AllayLauncher
-
-[AllayLauncher](https://github.com/AllayMC/AllayLauncher) is the launcher for allay. It has some cool features such as auto-updating, daemon mode
-and java checker. To use it, just run the following command based on your OS:
-
-Linux:
-
-```bash
-wget -qO- https://raw.githubusercontent.com/AllayMC/AllayLauncher/refs/heads/main/scripts/install_linux.sh | bash
-```
-
-Windows (PowerShell):
-
-```powershell
-Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/AllayMC/AllayLauncher/refs/heads/main/scripts/install_windows.ps1").Content
-```
-
-### 🔨 Install Allay Manually
-
-If you platform does not support AllayLauncher, don't be worry! You can also install Allay manually. Just
+After you have installed java 21, you can install Allay manually. Just
 download the `allayplus-server-*-shaded.jar` file from our release page. Move it to the folder you want and run:
 
 ```shell
@@ -160,19 +138,8 @@ the LGPL-3.0 license. The contents of the following folders are open-sourced und
 - [gophertunnel](https://github.com/Sandertv/gophertunnel): The protocol library for reference which is well-documented
 - [pmmp](https://github.com/pmmp/PocketMine-MP): Provides a lot of useful information in many ways
 
-[![YourKit-Logo](https://www.yourkit.com/images/yklogo.png)](https://www.yourkit.com/)
-
-YourKit has granted AllayMC team an open-source license to their
-outstanding Java profiler, allowing us to make our software as performant as it
-can be!
-
-YourKit supports open source projects with innovative and intelligent tools for
-monitoring and profiling Java and .NET applications. YourKit is the creator of
-the [YourKit Java Profiler](https://www.yourkit.com/java/profiler/), [YourKit .NET Profiler](https://www.yourkit.com/.net/profiler/),
-and [YourKit YouMonitor](https://www.yourkit.com/youmonitor/).
-
 ## 👀 Stargazers over time
 
-[![Stargazers over time](https://starchart.cc/AllayMC/Allay.svg)](https://starchart.cc/AllayMC/Allay)
+[![Stargazers over time](https://starchart.cc/AllayPlus/AllayPlus.svg?variant=adaptive)](https://starchart.cc/AllayPlus/AllayPlus)
 
 [//]: # (Allay is the cutest software in the world!)
