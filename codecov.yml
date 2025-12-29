@@ -10,7 +10,7 @@ coverage:
           - master
         if_ci_failed: error
         informational: true
-        only_pulls: false
+        only_pulls: true
     patch:
       default:
         target: auto
@@ -21,7 +21,7 @@ coverage:
           - master
         if_ci_failed: error
         informational: true
-        only_pulls: false
+        only_pulls: true
 
 ignore:
   # Block related auto-generated files
