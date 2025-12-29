@@ -2,24 +2,23 @@
 <br/>
 <div align="center">
 
-<a href="https://github.com/AllayMC/Allay">
+<a href="https://github.com/AllayPlus/AllayPlus">
     <img src="docs/assets/logo/allay-chan-640x.png" alt="Logo" width="200" height="200">
 </a>
 <h3 align="center">AllayPlus</h3>
 
 The next-generation Minecraft: Bedrock Edition server software aims to be reliable, fast and feature-rich
 
-<a href="https://github.com/AllayMC/Allay/actions"><img src="https://github.com/AllayMC/Allay/actions/workflows/gradle.yml/badge.svg" alt="Build"/></a>
+<a href="https://github.com/AllayPlus/AllayPlus/actions"><img src="https://github.com/AllayPlus/AllayPlus/actions/workflows/gradle.yml/badge.svg" alt="Build"/></a>
 <a href="https://docs.allaymc.org"><img src="https://readthedocs.org/projects/allaymc/badge/?version=latest" alt="Documentation Status"></a>
-[![javadoc](https://javadoc.io/badge2/org.allaymc.allay/api/javadoc.svg)](https://javadoc.io/doc/org.allaymc.allay/api)
-[![api](https://img.shields.io/maven-central/v/org.allaymc.allay/api?label=api)](https://central.sonatype.com/artifact/org.allaymc.allay/api)
-[![server](https://img.shields.io/maven-central/v/org.allaymc.allay/server?label=server)](https://central.sonatype.com/artifact/org.allaymc.allay/server)
-[![codecov](https://codecov.io/gh/AllayMC/Allay/graph/badge.svg?token=EI8EDEKI51)](https://codecov.io/gh/AllayMC/Allay)
-<a href="https://app.codacy.com/gh/AllayMC/Allay/dashboard"><img src="https://app.codacy.com/project/badge/Grade/30e264923da2425a8b777a84b4028334"></a>
+[![javadoc](https://javadoc.io/badge2/io.github.allayplus/api/javadoc.svg)](https://javadoc.io/doc/io.github.allayplus/api)
+[![api](https://img.shields.io/maven-central/v/io.github.allayplus/api?label=api)](https://central.sonatype.com/artifact/io.github.allayplus/api)
+[![server](https://img.shields.io/maven-central/v/io.github.allayplus/server?label=server)](https://central.sonatype.com/artifact/io.github.allayplus/server)
+[![codecov](https://codecov.io/gh/AllayPlus/AllayPlus/graph/badge.svg?token=TQVZ3XBJXC)](https://codecov.io/gh/AllayPlus/AllayPlus)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/87c025f71e9549b9a4f2ab36a56b5cf9)](https://app.codacy.com/gh/AllayPlus/AllayPlus/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 <a href="https://discord.gg/ngkkE4hPTU"><img src="https://img.shields.io/discord/1147136608290750526?label=discord&color=7289DA&logo=discord" alt="Discord" /></a>
-[![qq](https://img.shields.io/badge/QQ-1072132791-purple)](https://qm.qq.com/q/peseHA0xN0)
 <a href="https://feedback.minecraft.net/hc/en-us/sections/360001186971-Release-Changelogs"><img src="https://img.shields.io/badge/minecraft-1.21.80 ~ 1.21.130%20(Bedrock)-green" /></a>
-[![GitHub License](https://img.shields.io/github/license/allaymc/allay)](LICENSE)
+[![GitHub License](https://img.shields.io/github/license/AllayPlus/AllayPlus)](LICENSE)
 [![Ko-Fi](https://img.shields.io/badge/Buy_Me_a_Coffee-f37574?logo=kofi&logoColor=white)](https://ko-fi.com/AllayMC)
 
 </div>
@@ -47,28 +46,7 @@ Allay is written and running in java 21, so you need to install java 21. There a
 several version of java, and we recommend you to use [GraalVM](https://www.graalvm.org/) for the best performance.
 [OpenJDK](https://adoptopenjdk.net/) is also a good choice if you want to have a stable experience.
 
-After you have installed java 21, there are two ways to install Allay:
-
-### ⚡ Use AllayLauncher
-
-[AllayLauncher](https://github.com/AllayMC/AllayLauncher) is the launcher for allay. It has some cool features such as auto-updating, daemon mode
-and java checker. To use it, just run the following command based on your OS:
-
-Linux:
-
-```bash
-wget -qO- https://raw.githubusercontent.com/AllayMC/AllayLauncher/refs/heads/main/scripts/install_linux.sh | bash
-```
-
-Windows (PowerShell):
-
-```powershell
-Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/AllayMC/AllayLauncher/refs/heads/main/scripts/install_windows.ps1").Content
-```
-
-### 🔨 Install Allay Manually
-
-If you platform does not support AllayLauncher, don't be worry! You can also install Allay manually. Just
+After you have installed java 21, you can install Allay manually. Just
 download the `allayplus-server-*-shaded.jar` file from our release page. Move it to the folder you want and run:
 
 ```shell
@@ -104,7 +82,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly(group = "org.allaymc.allay", name = "api", version = "<version>")
+    compileOnly(group = "io.github.allayplus", name = "api", version = "<version>")
 }
 ```
 
@@ -120,7 +98,7 @@ repositories {
 
 dependencies {
     // Add `-SNAPSHOT` suffix to the version to use the snapshot version, an example is `0.19.0-SNAPSHOT`
-    compileOnly(group = "org.allaymc.allay", name = "api", version = "<version>-SNAPSHOT")
+    compileOnly(group = "io.github.allayplus", name = "api", version = "<version>-SNAPSHOT")
 }
 ```
 
@@ -136,17 +114,17 @@ a pull request! Please ensure your code follows our coding standards and include
 
 This project exists thanks to the participation of the following developers:
 
-![contributors](https://contrib.rocks/image?repo=AllayMC/Allay)
+![contributors](https://contrib.rocks/image?repo=AllayPlus/AllayPlus)
 
 ### Feedback
 
 Your feedback can make this project better. If you find a problem/have a new idea, feel free to raise it in
-the [issues page](https://github.com/AllayMC/Allay/issues). Ensure to include a detailed description of the 
+the [issues page](https://github.com/AllayPlus/AllayPlus/issues). Ensure to include a detailed description of the 
 bug and steps to reproduce it.
 
 ## 🎫 License
 
-Copyright **© 2023-2025 AllayMC**, all rights reserved. If not otherwise specified, project content is open source under
+Copyright **© 2026 AllayPlus**, all rights reserved. If not otherwise specified, project content is open source under
 the LGPL-3.0 license. The contents of the following folders are open-sourced under the MIT license:
 
 - data
@@ -160,19 +138,8 @@ the LGPL-3.0 license. The contents of the following folders are open-sourced und
 - [gophertunnel](https://github.com/Sandertv/gophertunnel): The protocol library for reference which is well-documented
 - [pmmp](https://github.com/pmmp/PocketMine-MP): Provides a lot of useful information in many ways
 
-[![YourKit-Logo](https://www.yourkit.com/images/yklogo.png)](https://www.yourkit.com/)
-
-YourKit has granted AllayMC team an open-source license to their
-outstanding Java profiler, allowing us to make our software as performant as it
-can be!
-
-YourKit supports open source projects with innovative and intelligent tools for
-monitoring and profiling Java and .NET applications. YourKit is the creator of
-the [YourKit Java Profiler](https://www.yourkit.com/java/profiler/), [YourKit .NET Profiler](https://www.yourkit.com/.net/profiler/),
-and [YourKit YouMonitor](https://www.yourkit.com/youmonitor/).
-
 ## 👀 Stargazers over time
 
-[![Stargazers over time](https://starchart.cc/AllayMC/Allay.svg)](https://starchart.cc/AllayMC/Allay)
+[![Stargazers over time](https://starchart.cc/AllayPlus/AllayPlus.svg?variant=adaptive)](https://starchart.cc/AllayPlus/AllayPlus)
 
 [//]: # (Allay is the cutest software in the world!)
