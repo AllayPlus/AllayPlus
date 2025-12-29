@@ -14,7 +14,7 @@ The next-generation Minecraft: Bedrock Edition server software aims to be reliab
 [![javadoc](https://javadoc.io/badge2/org.allaymc.allay/api/javadoc.svg)](https://javadoc.io/doc/org.allaymc.allay/api)
 [![api](https://img.shields.io/maven-central/v/org.allaymc.allay/api?label=api)](https://central.sonatype.com/artifact/org.allaymc.allay/api)
 [![server](https://img.shields.io/maven-central/v/org.allaymc.allay/server?label=server)](https://central.sonatype.com/artifact/org.allaymc.allay/server)
-[![codecov](https://codecov.io/gh/AllayMC/Allay/graph/badge.svg?token=EI8EDEKI51)](https://codecov.io/gh/AllayMC/Allay)
+[![codecov](https://codecov.io/gh/AllayPlus/AllayPlus/graph/badge.svg?token=TQVZ3XBJXC)](https://codecov.io/gh/AllayPlus/AllayPlus)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/87c025f71e9549b9a4f2ab36a56b5cf9)](https://app.codacy.com/gh/AllayPlus/AllayPlus/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 <a href="https://discord.gg/ngkkE4hPTU"><img src="https://img.shields.io/discord/1147136608290750526?label=discord&color=7289DA&logo=discord" alt="Discord" /></a>
 [![qq](https://img.shields.io/badge/QQ-1072132791-purple)](https://qm.qq.com/q/peseHA0xN0)
