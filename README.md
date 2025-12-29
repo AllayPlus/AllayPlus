@@ -25,28 +25,28 @@ The next-generation Minecraft: Bedrock Edition server software aims to be reliab
 
 ## 📖 Introduction
 
-Allay is a third-party server software for Minecraft: Bedrock Edition written from scratch, with the goal of being
+AllayPlus is a third-party server software for Minecraft: Bedrock Edition written from scratch, with the goal of being
 reliable, fast and feature-rich.
 
-## 🎯 Why Allay?
+## 🎯 Why AllayPlus?
 
-- **Fast**: Allay is very fast. Compared to almost all other server software, Allay is far more performant in almost all aspects. The written from
+- **Fast**: AllayPlus is very fast. Compared to almost all other server software, AllayPlus is far more performant in almost all aspects. The written from
 scratch codebase allows us to re-examine performance critical points and solve problems in the most efficient way.
-- **Reliable**: Allay is designed to be reliable. To achieve this goal, we have written a lot of unit tests to ensure the stability of the project.
-- **Hassle-free**: Allay is designed to be user-friendly and is ready to use right out of the box. We also have complete documentation to guide you 
+- **Reliable**: AllayPlus is designed to be reliable. To achieve this goal, we have written a lot of unit tests to ensure the stability of the project.
+- **Hassle-free**: AllayPlus is designed to be user-friendly and is ready to use right out of the box. We also have complete documentation to guide you 
 in your deployment. 
 - **Developer-friendly**: Our api is seperated from the implementation and is well-documented. No more wasting time looking at the implementation.
-- **Feature-rich**: One of our goal is to be feature-rich. Thanks to the architecture of Allay, adding new features is very easy for us.
-- **Cross-platform**: Benefit from JVM, allay can run on almost any platform.
-- **Multi-version**: Allay has multi-version support. No longer worry about losing your players due to version updates.
+- **Feature-rich**: One of our goal is to be feature-rich. Thanks to the architecture of AllayPlus, adding new features is very easy for us.
+- **Cross-platform**: Benefit from JVM, AllayPlus can run on almost any platform.
+- **Multi-version**: AllayPlus has multi-version support. No longer worry about losing your players due to version updates.
 
 ## 🛠️ Getting Started
 
-Allay is written and running in java 21, so you need to install java 21. There are
+AllayPlus is written and running in java 21, so you need to install java 21. There are
 several version of java, and we recommend you to use [GraalVM](https://www.graalvm.org/) for the best performance.
 [OpenJDK](https://adoptopenjdk.net/) is also a good choice if you want to have a stable experience.
 
-After you have installed java 21, you can install Allay manually. Just
+After you have installed java 21, you can install AllayPlus manually. Just
 download the `allayplus-server-*-shaded.jar` file from our release page. Move it to the folder you want and run:
 
 ```shell
@@ -55,7 +55,7 @@ java -jar allayplus-server-*-shaded.jar
 
 ## 🌟 Plugins
 
-Allay supports running plugins written in Java, Kotlin, Scala (JVM based language).
+AllayPlus supports running plugins written in Java, Kotlin, Scala (JVM based language).
 
 ### Use Plugin Template
 
@@ -66,14 +66,14 @@ You can check out the following plugin templates:
 - [KotlinPluginTemplate](https://github.com/MineBuilders/allaymc-kotlin-plugin-template)
 - [ScalaPluginTemplate](https://github.com/AllayMC/ScalaPluginTemplate)
 
-### Use Allay Gradle Plugin
+### Use AllayPlus Gradle Plugin
 
-Allay provides a Gradle plugin to make it much easier to develop Allay plugin. Check out
+AllayPlus provides a Gradle plugin to make it much easier to develop AllayPlus plugin. Check out
 [AllayGradle](https://github.com/AllayMC/AllayGradle) for more information about how to use it.
 
-### Use Allay in Existing Project
+### Use AllayPlus in Existing Project
 
-Allay API is published to the Maven Central. If you have an existing project and want to use Allay in it, simply
+AllayPlus API is published to the Maven Central. If you have an existing project and want to use AllayPlus in it, simply
 add the following dependencies to your project:
 
 ```kts
@@ -132,8 +132,8 @@ the LGPL-3.0 license. The contents of the following folders are open-sourced und
 
 ## ❤️ Special Thanks
 
-- [Endstone](https://github.com/EndstoneMC/Endstone): Endstone's build-in DevTools is essential for Allay to dump key data from BDS
-- [Protocol](https://github.com/CloudburstMC/Protocol): The protocol library and implementation of RakNet used by Allay
+- [Endstone](https://github.com/EndstoneMC/Endstone): Endstone's build-in DevTools is essential for AllayPlus to dump key data from BDS
+- [Protocol](https://github.com/CloudburstMC/Protocol): The protocol library and implementation of RakNet used by AllayPlus
 - [df-mc](https://github.com/df-mc): References for some key API designs
 - [gophertunnel](https://github.com/Sandertv/gophertunnel): The protocol library for reference which is well-documented
 - [pmmp](https://github.com/pmmp/PocketMine-MP): Provides a lot of useful information in many ways
@@ -142,4 +142,4 @@ the LGPL-3.0 license. The contents of the following folders are open-sourced und
 
 [![Stargazers over time](https://starchart.cc/AllayPlus/AllayPlus.svg?variant=adaptive)](https://starchart.cc/AllayPlus/AllayPlus)
 
-[//]: # (Allay is the cutest software in the world!)
+[//]: # (AllayPlus is the cutest software in the world!)
