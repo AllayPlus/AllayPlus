@@ -200,7 +200,6 @@ public class AllayPlayer implements Player {
     @Getter
     @Setter
     protected boolean containerClosedByClient;
-    @Getter
     protected Speed speed, flySpeed, verticalFlySpeed;
 
     // Container
@@ -2357,6 +2356,21 @@ public class AllayPlayer implements Player {
         entry.setTrustedSkin(AllayServer.getSettings().resourcePackSettings().trustAllSkins());
         entry.setColor(new Color(player.getOriginName().hashCode() & 0xFFFFFF));
         return entry;
+    }
+
+    @Override
+    public Speed getSpeed() {
+        return speed;
+    }
+
+    @Override
+    public Speed getFlySpeed() {
+        return flySpeed;
+    }
+
+    @Override
+    public Speed getVerticalFlySpeed() {
+        return verticalFlySpeed;
     }
 
     @Override
