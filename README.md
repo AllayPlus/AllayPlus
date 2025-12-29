@@ -3,7 +3,7 @@
 <div align="center">
 
 <a href="https://github.com/AllayPlus/AllayPlus">
-    <img src="docs/assets/logo/allay-chan-640x.png" alt="Logo" width="200" height="200">
+    <img src="docs/assets/logo/allayplus.png" alt="Logo" width="200" height="200">
 </a>
 <h3 align="center">AllayPlus</h3>
 
