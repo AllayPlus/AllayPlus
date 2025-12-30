@@ -20,7 +20,9 @@ public class PluginCommand extends Command {
     @Override
     public void prepareCommandTree(CommandTree tree) {
         tree.getRoot()
+                .defaultValue("list")
                 .key("list")
+                .optional()
                 .exec(context -> {
                     var enabledPlugins = Server.getInstance().getPluginManager().getEnabledPlugins();
                     var pluginList = enabledPlugins.entrySet().stream()

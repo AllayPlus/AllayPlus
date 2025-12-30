@@ -77,6 +77,11 @@ public abstract class BaseNode implements CommandNode {
             return this;
         }
 
+        // optional() must not be called on a node without a parent (root)
+        if (parent == null) {
+            throw new IllegalStateException("Cannot mark root node as optional");
+        }
+
         // A node can only have one optional leaf
         if (parent.getOptionalLeaf() != null) {
             throw new IllegalArgumentException("A node can only have one optional leaf node!");

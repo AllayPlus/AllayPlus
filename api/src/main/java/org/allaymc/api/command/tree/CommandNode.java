@@ -170,7 +170,11 @@ public interface CommandNode {
      * @return the root {@code CommandNode}
      */
     default CommandNode root() {
-        return up(depth());
+        CommandNode node = this;
+        while (!node.isRoot()) {
+            node = node.parent();
+        }
+        return node;
     }
 
     /**

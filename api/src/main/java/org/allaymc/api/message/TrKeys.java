@@ -3239,6 +3239,12 @@ public interface TrKeys {
      */
     String MC_COMMANDS_DEFAULTGAMEMODE_SUCCESS = "minecraft:commands.defaultgamemode.success";
 
+    String MC_COMMANDS_GAMEMODE_HELP = "minecraft:commands.gamemode.help";
+
+    String MC_COMMANDS_GAMEMODE_HELP_MODE = "minecraft:commands.gamemode.help.mode";
+
+    String MC_COMMANDS_GAMEMODE_HELP_PLAYER = "minecraft:commands.gamemode.help.player";
+
     /**
      * {@literal Revokes operator status from a player.}
      */

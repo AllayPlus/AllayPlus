@@ -1,5 +1,8 @@
 package org.allaymc.server.command.defaults;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.allaymc.api.command.Command;
 import org.allaymc.api.command.SenderType;
 import org.allaymc.api.command.tree.CommandTree;
@@ -9,9 +12,6 @@ import org.allaymc.api.message.LangCode;
 import org.allaymc.api.message.TrKeys;
 import org.allaymc.api.permission.Permissions;
 import org.allaymc.api.player.GameMode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author daoge_cmd
@@ -25,6 +25,17 @@ public class GameModeCommand extends Command {
     @Override
     public void prepareCommandTree(CommandTree tree) {
         tree.getRoot()
+                .defaultValue("help")
+                .key("help")
+                .optional()
+                .exec(context -> {
+                    context.addOutput(TrKeys.MC_COMMANDS_GAMEMODE_HELP,
+                            "/gamemode <mode> [player]",
+                            I18n.get().tr(TrKeys.MC_COMMANDS_GAMEMODE_HELP_MODE),
+                            I18n.get().tr(TrKeys.MC_COMMANDS_GAMEMODE_HELP_PLAYER));
+                    return context.success();
+                })
+                .root()
                 .gameMode()
                 .playerTarget("players").optional()
                 .exec(context -> {
