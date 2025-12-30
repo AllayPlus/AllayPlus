@@ -27,6 +27,7 @@ import org.allaymc.api.world.data.Weather;
 import org.allaymc.api.world.gamerule.GameRule;
 import org.allaymc.server.component.annotation.Dependency;
 import org.allaymc.server.entity.data.EntityId;
+import org.allaymc.server.utils.BedUtils;
 import org.allaymc.server.world.AllayWorld;
 import org.joml.Vector3ic;
 
@@ -217,7 +218,8 @@ public class BlockBedBaseComponentImpl extends BlockBaseComponentImpl {
             return true;
         }
 
-        if (headBlock.getPropertyValue(BlockPropertyTypes.OCCUPIED_BIT) || isBedOccupiedByPlayer(dimension, headPos)) {
+        if (headBlock.getPropertyValue(BlockPropertyTypes.OCCUPIED_BIT) ||
+            BedUtils.isBedOccupiedByPlayer(dimension, headPos)) {
             player.sendTranslatable(TrKeys.MC_TILE_BED_OCCUPIED);
             return true;
         }
@@ -269,24 +271,6 @@ public class BlockBedBaseComponentImpl extends BlockBaseComponentImpl {
         return Set.of(drop);
     }
 
-    private boolean isBedOccupiedByPlayer(Dimension dimension, Vector3ic bedPos) {
-        for (var viewer : dimension.getPlayers()) {
-            var player = viewer.getControlledEntity();
-            if (player == null || !player.isSleeping()) {
-                continue;
-            }
-
-            var sleepingPos = player.getSleepingPos();
-            if (sleepingPos != null &&
-                sleepingPos.x() == bedPos.x() &&
-                sleepingPos.y() == bedPos.y() &&
-                sleepingPos.z() == bedPos.z()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private boolean isSleepBlockedByMonsters(Dimension dimension, Vector3ic bedPos) {
         double bedX = bedPos.x() + 0.5;
         double bedY = bedPos.y() + 0.5;
@@ -320,19 +304,8 @@ public class BlockBedBaseComponentImpl extends BlockBaseComponentImpl {
         }
 
         var headPos = headBlock.getPosition();
-        for (var viewer : headPos.dimension().getPlayers()) {
-            var player = viewer.getControlledEntity();
-            if (player == null || !player.isSleeping()) {
-                continue;
-            }
-
-            var sleepingPos = player.getSleepingPos();
-            if (sleepingPos != null &&
-                sleepingPos.x() == headPos.x() &&
-                sleepingPos.y() == headPos.y() &&
-                sleepingPos.z() == headPos.z()) {
-                player.stopSleep();
-            }
+        for (var player : BedUtils.getSleepingPlayersAtBed(headPos.dimension(), headPos)) {
+            player.stopSleep();
         }
     }
 }

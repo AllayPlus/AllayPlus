@@ -38,6 +38,7 @@ import org.allaymc.server.entity.component.EntityBaseComponentImpl;
 import org.allaymc.server.entity.component.event.CEntityAfterDamageEvent;
 import org.allaymc.server.entity.component.event.CEntityAttackEvent;
 import org.allaymc.server.entity.component.event.CPlayerGameModeChangeEvent;
+import org.allaymc.server.utils.BedUtils;
 import org.allaymc.server.world.AllayDimension;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.nbt.NbtMap;
@@ -791,19 +792,8 @@ public class EntityPlayerBaseComponentImpl extends EntityBaseComponentImpl imple
             return false;
         }
 
-        for (var viewer : bedPos.dimension().getPlayers()) {
-            var entity = viewer.getControlledEntity();
-            if (entity == null || entity == thisPlayer || !entity.isSleeping()) {
-                continue;
-            }
-
-            var otherPos = entity.getSleepingPos();
-            if (otherPos != null &&
-                otherPos.x() == bedPos.x() &&
-                otherPos.y() == bedPos.y() &&
-                otherPos.z() == bedPos.z()) {
-                return false;
-            }
+        if (BedUtils.isBedOccupiedByPlayer(bedPos.dimension(), bedPos)) {
+            return false;
         }
 
         var event = new PlayerBedEnterEvent(thisPlayer, bedBlock);

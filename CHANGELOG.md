@@ -28,9 +28,12 @@ Unless otherwise specified, any version comparison below is the comparison of th
   - (API) Added `SidedContainer` interface to represent a container that restricts insertion/extraction by side.
   - (API) Added `ContainerItemPickupEvent` for item entity pickups into containers.
   - (API) Added `ContainerTypes.HOPPER`.
+- (API) Added events `PlayerBedEnterEvent` and `PlayerBedLeaveEvent`.
 - Added properties `network-settings.raknet-send-cookie` and `network-settings.raknet-max-mtu` to `server.properties`.
 - Implemented Totem of Undying.
 - Implemented End Crystal.
+- Implemented bed sleeping mechanics.
+- Added hostile mob proximity checks to block sleeping near danger.
 - Implemented commands `/playsound`, `/stopsound`, `/playanimation`, `/hud`, and `/particle`.
 
 ### Changed
