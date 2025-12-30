@@ -164,7 +164,7 @@ public final class Allay {
         api.bind(NBTIO.class, AllayNBTIO::new);
         api.bind(FakeContainerFactory.class, AllayFakeContainerFactory::new);
 
-        api.implement("allay", GitProperties.isDevBuild());
+        api.implement("AllayPlus", GitProperties.isDevBuild());
 
         var versionStr = ProtocolInfo.getLowestCodec().getMinecraftVersion() + " - " + ProtocolInfo.getLatestCodec().getMinecraftVersion();
         var protocolStr = ProtocolInfo.getLowestCodec().getProtocolVersion() + " - " + ProtocolInfo.getLatestCodec().getProtocolVersion();
