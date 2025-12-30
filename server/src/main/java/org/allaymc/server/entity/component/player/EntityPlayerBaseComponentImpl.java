@@ -122,10 +122,18 @@ public class EntityPlayerBaseComponentImpl extends EntityBaseComponentImpl imple
     protected String scoreTag;
     @Getter
     protected boolean sprinting, sneaking, swimming, gliding, crawling, flying;
-    @Getter
     protected boolean sleeping;
-    @Getter
     protected Position3ic sleepingPos;
+
+    @Override
+    public boolean isSleeping() {
+        return sleeping;
+    }
+
+    @Override
+    public Position3ic getSleepingPos() {
+        return sleepingPos;
+    }
 
     @Getter
     protected int experienceLevel;

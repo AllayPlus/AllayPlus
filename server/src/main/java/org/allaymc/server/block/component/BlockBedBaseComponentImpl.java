@@ -115,7 +115,8 @@ public class BlockBedBaseComponentImpl extends BlockBaseComponentImpl {
         }
 
         var dir = block.getPropertyValue(BlockPropertyTypes.DIRECTION_4);
-        return otherPart.getPropertyValue(BlockPropertyTypes.DIRECTION_4) == dir;
+        var otherDir = otherPart.getPropertyValue(BlockPropertyTypes.DIRECTION_4);
+        return otherDir.intValue() == dir.intValue();
     }
 
     private static Block getValidHead(Block block) {
