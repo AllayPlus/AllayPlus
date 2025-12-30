@@ -1,7 +1,9 @@
 package org.allaymc.api.entity.component;
 
+import org.allaymc.api.block.dto.Block;
 import org.allaymc.api.item.type.ItemType;
 import org.allaymc.api.math.location.Location3ic;
+import org.allaymc.api.math.position.Position3ic;
 import org.allaymc.api.player.GameMode;
 import org.allaymc.api.player.Player;
 import org.allaymc.api.player.Skin;
@@ -107,6 +109,33 @@ public interface EntityPlayerBaseComponent extends EntityBaseComponent, ChunkLoa
      * @param crawling Whether the player should be crawling
      */
     void setCrawling(boolean crawling);
+
+    /**
+     * Check if the player is sleeping in a bed.
+     *
+     * @return {@code true} if the player is sleeping, {@code false} otherwise.
+     */
+    boolean isSleeping();
+
+    /**
+     * Get the position of the bed the player is currently sleeping in.
+     *
+     * @return the bed position, or {@code null} if the player is not sleeping
+     */
+    Position3ic getSleepingPos();
+
+    /**
+     * Make the player sleep in the specified bed.
+     *
+     * @param bedBlock the bed block to sleep in
+     * @return {@code true} if the player successfully entered the bed, {@code false} otherwise
+     */
+    boolean sleepOn(Block bedBlock);
+
+    /**
+     * Stop sleeping and leave the current bed.
+     */
+    void stopSleep();
 
     /**
      * Check if the player is using an item on a block.

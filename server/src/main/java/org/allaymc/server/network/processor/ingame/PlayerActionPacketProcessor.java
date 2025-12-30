@@ -16,6 +16,12 @@ public class PlayerActionPacketProcessor extends PacketProcessor<PlayerActionPac
     public PacketSignal handleAsync(Player player, PlayerActionPacket packet, long receiveTime) {
         var entity = player.getControlledEntity();
         return switch (packet.getAction()) {
+            case STOP_SLEEP -> {
+                if (entity.isSleeping()) {
+                    entity.stopSleep();
+                }
+                yield PacketSignal.HANDLED;
+            }
             case START_ITEM_USE_ON -> {
                 if (entity.isUsingItemOnBlock()) {
                     log.debug("Player {} tried to start item use on without stopping", player.getOriginName());

@@ -3,6 +3,10 @@ package org.allaymc.server.entity.component.player;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.allaymc.api.block.dto.Block;
+import org.allaymc.api.block.data.BlockFace;
+import org.allaymc.api.block.property.type.BlockPropertyTypes;
+import org.allaymc.api.block.type.BlockTypes;
 import org.allaymc.api.command.CommandSender;
 import org.allaymc.api.entity.EntityInitInfo;
 import org.allaymc.api.entity.action.EntityAction;
@@ -10,10 +14,14 @@ import org.allaymc.api.entity.component.EntityPlayerBaseComponent;
 import org.allaymc.api.entity.damage.DamageContainer;
 import org.allaymc.api.entity.interfaces.EntityPlayer;
 import org.allaymc.api.eventbus.EventHandler;
+import org.allaymc.api.eventbus.event.entity.EntityTeleportEvent;
 import org.allaymc.api.eventbus.event.player.*;
+import org.allaymc.api.math.location.Location3d;
 import org.allaymc.api.math.location.Location3dc;
 import org.allaymc.api.math.location.Location3i;
 import org.allaymc.api.math.location.Location3ic;
+import org.allaymc.api.math.position.Position3i;
+import org.allaymc.api.math.position.Position3ic;
 import org.allaymc.api.message.TrContainer;
 import org.allaymc.api.player.GameMode;
 import org.allaymc.api.player.Player;
@@ -24,6 +32,7 @@ import org.allaymc.api.world.WorldState;
 import org.allaymc.api.world.WorldViewer;
 import org.allaymc.api.world.data.Difficulty;
 import org.allaymc.server.AllayServer;
+import org.allaymc.server.block.component.BlockBedBaseComponentImpl;
 import org.allaymc.server.component.annotation.ComponentObject;
 import org.allaymc.server.entity.component.EntityBaseComponentImpl;
 import org.allaymc.server.entity.component.event.CEntityAfterDamageEvent;
@@ -35,6 +44,7 @@ import org.cloudburstmc.nbt.NbtMap;
 import org.cloudburstmc.nbt.NbtMapBuilder;
 import org.cloudburstmc.protocol.bedrock.data.GameType;
 import org.cloudburstmc.protocol.bedrock.data.PlayerActionType;
+import org.cloudburstmc.protocol.bedrock.packet.AnimatePacket;
 import org.cloudburstmc.protocol.bedrock.packet.ChangeDimensionPacket;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerActionPacket;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerStartItemCooldownPacket;
@@ -112,6 +122,10 @@ public class EntityPlayerBaseComponentImpl extends EntityBaseComponentImpl imple
     protected String scoreTag;
     @Getter
     protected boolean sprinting, sneaking, swimming, gliding, crawling, flying;
+    @Getter
+    protected boolean sleeping;
+    @Getter
+    protected Position3ic sleepingPos;
 
     @Getter
     protected int experienceLevel;
@@ -759,6 +773,88 @@ public class EntityPlayerBaseComponentImpl extends EntityBaseComponentImpl imple
     }
 
     @Override
+    public boolean sleepOn(Block bedBlock) {
+        if (this.sleeping || bedBlock == null || thisPlayer.isDead()) {
+            return false;
+        }
+
+        var bedPos = bedBlock.getPosition();
+        if (bedPos.dimension() != thisPlayer.getDimension()) {
+            return false;
+        }
+
+        for (var viewer : bedPos.dimension().getPlayers()) {
+            var entity = viewer.getControlledEntity();
+            if (entity == null || entity == thisPlayer || !entity.isSleeping()) {
+                continue;
+            }
+
+            var otherPos = entity.getSleepingPos();
+            if (otherPos != null &&
+                otherPos.x() == bedPos.x() &&
+                otherPos.y() == bedPos.y() &&
+                otherPos.z() == bedPos.z()) {
+                return false;
+            }
+        }
+
+        var event = new PlayerBedEnterEvent(thisPlayer, bedBlock);
+        if (!event.call()) {
+            return false;
+        }
+
+        var location = thisPlayer.getLocation();
+        var bedFace = BlockFace.fromHorizontalIndex(bedBlock.getPropertyValue(BlockPropertyTypes.DIRECTION_4));
+        var yaw = bedFace != null ? bedFace.yaw() : location.yaw();
+        var target = new Location3d(
+                bedPos.x() + 0.5,
+                bedPos.y() + 0.5,
+                bedPos.z() + 0.5,
+                location.pitch(),
+                yaw,
+                bedPos.dimension()
+        );
+        if (!thisPlayer.teleport(target, EntityTeleportEvent.Reason.UNKNOWN)) {
+            return false;
+        }
+
+        this.sleeping = true;
+        this.sleepingPos = new Position3i(bedPos, bedPos.dimension());
+        setBedOccupied(bedBlock, true);
+        broadcastState();
+        return true;
+    }
+
+    @Override
+    public void stopSleep() {
+        if (!this.sleeping) {
+            return;
+        }
+
+        var bedPos = this.sleepingPos;
+        this.sleeping = false;
+        this.sleepingPos = null;
+
+        Block bedBlock = null;
+        if (bedPos != null) {
+            bedBlock = new Block(bedPos.dimension(), bedPos);
+            setBedOccupied(bedBlock, false);
+        }
+
+        broadcastState();
+        if (bedBlock != null) {
+            new PlayerBedLeaveEvent(thisPlayer, bedBlock).call();
+        }
+
+        if (isActualPlayer() && controller != null) {
+            var packet = new AnimatePacket();
+            packet.setAction(AnimatePacket.Action.WAKE_UP);
+            packet.setRuntimeEntityId(thisPlayer.getRuntimeId());
+            controller.sendPacket(packet);
+        }
+    }
+
+    @Override
     public void setUsingItemOnBlock(boolean usingItemOnBlock) {
         this.usingItemOnBlock = usingItemOnBlock;
     }
@@ -784,11 +880,26 @@ public class EntityPlayerBaseComponentImpl extends EntityBaseComponentImpl imple
 
     @EventHandler
     protected void onDamage(CEntityAfterDamageEvent event) {
+        if (sleeping) {
+            stopSleep();
+        }
         exhaust(0.1f);
     }
 
     @EventHandler
     protected void onAttack(CEntityAttackEvent event) {
         exhaust(0.1f);
+    }
+
+    private void setBedOccupied(Block bedBlock, boolean occupied) {
+        if (bedBlock.getBlockType() != BlockTypes.BED) {
+            return;
+        }
+
+        bedBlock.updateBlockProperty(BlockPropertyTypes.OCCUPIED_BIT, occupied);
+        var otherPart = BlockBedBaseComponentImpl.getPairBlock(bedBlock);
+        if (otherPart.getBlockType() == BlockTypes.BED) {
+            otherPart.updateBlockProperty(BlockPropertyTypes.OCCUPIED_BIT, occupied);
+        }
     }
 }

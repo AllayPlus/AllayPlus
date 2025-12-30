@@ -160,6 +160,7 @@ public class AllayPlayer implements Player {
     protected static final int BLOCK_UPDATE_NETWORK = 0b0010;
     protected static final int BLOCK_UPDATE_NO_GRAPHICS = 0b0100;
     protected static final int BLOCK_UPDATE_PRIORITY = 0b1000;
+    protected static final byte PLAYER_FLAG_SLEEP = 0x2;
 
     // Constants used in BlockEventPacket
     protected static final int BLOCK_EVENT_TYPE_CHANGE_CHEST_STATE = 1;
@@ -632,6 +633,16 @@ public class AllayPlayer implements Player {
                 map.setFlag(EntityFlag.GLIDING, player.isGliding());
                 map.setFlag(EntityFlag.CRAWLING, player.isCrawling());
                 map.setFlag(EntityFlag.USING_ITEM, player.isUsingItemInAir());
+                map.setFlag(EntityFlag.SLEEPING, player.isSleeping());
+                byte playerFlags = 0;
+                if (player.isSleeping()) {
+                    playerFlags |= PLAYER_FLAG_SLEEP;
+                }
+                map.put(EntityDataTypes.PLAYER_FLAGS, playerFlags);
+                var sleepingPos = player.getSleepingPos();
+                if (sleepingPos != null) {
+                    map.put(EntityDataTypes.BED_POSITION, Vector3i.from(sleepingPos.x(), sleepingPos.y(), sleepingPos.z()));
+                }
                 map.setFlag(EntityFlag.BREATHING, player.canBreathe());
                 map.put(EntityDataTypes.AIR_SUPPLY, (short) player.getAirSupplyTicks());
                 map.put(EntityDataTypes.AIR_SUPPLY_MAX, (short) player.getAirSupplyMaxTicks());

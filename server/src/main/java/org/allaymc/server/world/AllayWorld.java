@@ -20,6 +20,7 @@ import org.allaymc.api.scheduler.Scheduler;
 import org.allaymc.api.server.Server;
 import org.allaymc.api.world.Dimension;
 import org.allaymc.api.world.World;
+import org.allaymc.api.world.WorldData;
 import org.allaymc.api.world.WorldState;
 import org.allaymc.api.world.chunk.FakeChunkLoader;
 import org.allaymc.api.world.data.Weather;
@@ -48,6 +49,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class AllayWorld implements World {
 
     protected static final int TIME_SENDING_INTERVAL = 12 * 20;
+    protected static final int SLEEP_CHECK_DELAY = 75;
     protected static final int MAX_PACKETS_HANDLE_COUNT_AT_ONCE = AllayServer.getSettings().networkSettings().maxSyncedPacketsHandleCountAtOnce();
     protected static final boolean ENABLE_INDEPENDENT_NETWORK_THREAD = AllayServer.getSettings().networkSettings().enableIndependentNetworkThread();
     protected static final boolean TICK_DIMENSION_IN_PARALLEL = AllayServer.getSettings().worldSettings().tickDimensionInParallel();
@@ -72,6 +74,7 @@ public class AllayWorld implements World {
     protected final Thread worldThread, networkThread;
 
     protected long nextTimeSendTick;
+    protected int sleepTicks;
 
     @Getter
     protected Weather weather;
@@ -198,6 +201,7 @@ public class AllayWorld implements World {
 
         tickTime(currentTick);
         tickWeather();
+        tickSleep();
         scheduler.tick();
 
         if (TICK_DIMENSION_IN_PARALLEL) {
@@ -299,6 +303,62 @@ public class AllayWorld implements World {
         }
 
         setWeather(newWeather);
+    }
+
+    protected void tickSleep() {
+        if (sleepTicks > 0 && --sleepTicks <= 0) {
+            checkSleep();
+        }
+    }
+
+    public void scheduleSleepCheck() {
+        this.sleepTicks = SLEEP_CHECK_DELAY;
+    }
+
+    public void clearSleepCheck() {
+        this.sleepTicks = 0;
+    }
+
+    protected void checkSleep() {
+        var overworld = getOverWorld();
+        if (overworld == null) {
+            return;
+        }
+
+        var players = overworld.getPlayers();
+        if (players.isEmpty()) {
+            return;
+        }
+
+        int totalPlayers = 0;
+        int sleepingPlayers = 0;
+        for (var player : players) {
+            var entity = player.getControlledEntity();
+            if (entity == null || entity.isDead()) {
+                continue;
+            }
+
+            totalPlayers++;
+            if (entity.isSleeping()) {
+                sleepingPlayers++;
+            }
+        }
+
+        if (totalPlayers == 0 || sleepingPlayers < totalPlayers) {
+            return;
+        }
+
+        var time = worldData.getTimeOfDay();
+        if (time >= WorldData.TIME_NIGHT && time < WorldData.TIME_SUNRISE || weather == Weather.THUNDER) {
+            worldData.setTimeOfDay(WorldData.TIME_DAY);
+            setWeather(Weather.CLEAR);
+            for (var player : players) {
+                var entity = player.getControlledEntity();
+                if (entity != null && entity.isSleeping()) {
+                    entity.stopSleep();
+                }
+            }
+        }
     }
 
     @Override
