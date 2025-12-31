@@ -1,6 +1,6 @@
 package org.allaymc.api.world.chunk;
 
-import org.allaymc.api.math.location.Location3dc
+import org.allaymc.api.math.location.Location3dc;
 import org.allaymc.api.world.WorldViewer;
 
 /**
