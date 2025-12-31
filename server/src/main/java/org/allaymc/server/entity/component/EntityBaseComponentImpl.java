@@ -289,12 +289,14 @@ public class EntityBaseComponentImpl implements EntityBaseComponent {
         newChunkOnlyLoaders.removeAll(oldChunkLoaders);
 
         oldChunkOnlyLoaders.stream()
-                .filter(loader -> loader != thisEntity && loader instanceof WorldViewer)
-                .map(loader -> (WorldViewer) loader)
+                .filter(loader -> loader != thisEntity)
+                .map(ChunkLoader::toWorldViewer)
+                .filter(Objects::nonNull)
                 .forEach(this::despawnFrom);
         newChunkOnlyLoaders.stream()
-                .filter(loader -> loader != thisEntity && loader instanceof WorldViewer)
-                .map(loader -> (WorldViewer) loader)
+                .filter(loader -> loader != thisEntity)
+                .map(ChunkLoader::toWorldViewer)
+                .filter(Objects::nonNull)
                 .forEach(this::spawnTo);
     }
 

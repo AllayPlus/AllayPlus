@@ -48,6 +48,8 @@ Unless otherwise specified, any version comparison below is the comparison of th
 ### Fixed
 
 - (API) Fixed method `Container.removeAllViewers()` won't remove all viewers from the container.
+- Fixed a bug where a player teleporting into another player's loaded area would not be visible to that player. Introduced methods
+  `ChunkLoader.isWorldViewer()` and `ChunkLoader.toWorldViewer()`.
 - Fixed a bug where the jukebox could not eject music discs.
 - `RAK_SEND_COOKIE` is set to `true` by default in `AllayNetworkInterface` to resolve connection issue.
 - Fixed a bug where calling method `Container.removeViewer()` server-side will make the client no longer able to open any container.
