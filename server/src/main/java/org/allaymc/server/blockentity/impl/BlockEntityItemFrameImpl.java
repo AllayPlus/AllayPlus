@@ -14,10 +14,10 @@ import java.util.List;
  * @author daoge_cmd
  */
 public class BlockEntityItemFrameImpl extends BlockEntityImpl implements BlockEntityItemFrame, BlockEntityGlowItemFrame {
-    }
 
     @Delegate
     private BlockEntityItemFrameBaseComponent itemFrameBaseComponent;
+
     public BlockEntityItemFrameImpl(BlockEntityInitInfo initInfo, List<ComponentProvider<? extends Component>> componentProviders) {
         super(initInfo, componentProviders);
     }
