@@ -875,6 +875,15 @@ public class EntityPlayerBaseComponentImpl extends EntityBaseComponentImpl imple
 
         return new AABBd(-0.3, 0.0, -0.3, 0.3, height, 0.3);
     }
+    
+   @Override
+    public WorldViewer toWorldViewer() {
+        if (isActualPlayer()) {
+            return this.controller;
+        }
+
+        return null;
+    }
 
     @EventHandler
     protected void onDamage(CEntityAfterDamageEvent event) {

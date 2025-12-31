@@ -12,7 +12,7 @@ Unless otherwise specified, any version comparison below is the comparison of th
 
 # 0.10.3 (API 0.20.0) - Unreleased
 
-<small>[Compare with 0.10.2](https://github.com/AllayMC/Allay/compare/0.10.2...HEAD)</small>
+<small>[Compare with 0.10.2](https://github.com/AllayPlus/AllayPlus/compare/0.10.2...HEAD)</small>
 
 ### Added
 
@@ -28,6 +28,7 @@ Unless otherwise specified, any version comparison below is the comparison of th
   - (API) Added `SidedContainer` interface to represent a container that restricts insertion/extraction by side.
   - (API) Added `ContainerItemPickupEvent` for item entity pickups into containers.
   - (API) Added `ContainerTypes.HOPPER`.
+  - (API) Added methods `ChunkLoader.isWorldViewer()` and `ChunkLoader.toWorldViewer()`.
 - (API) Added events `PlayerBedEnterEvent` and `PlayerBedLeaveEvent`.
 - Added properties `network-settings.raknet-send-cookie` and `network-settings.raknet-max-mtu` to `server.properties`.
 - Implemented Totem of Undying.
@@ -48,6 +49,8 @@ Unless otherwise specified, any version comparison below is the comparison of th
 ### Fixed
 
 - (API) Fixed method `Container.removeAllViewers()` won't remove all viewers from the container.
+- Fixed a bug where a player teleporting into another player's loaded area would not be visible to that player.
+- Fixed a bug where the jukebox could not eject music discs.
 - `RAK_SEND_COOKIE` is set to `true` by default in `AllayNetworkInterface` to resolve connection issue.
 - Fixed a bug where calling method `Container.removeViewer()` server-side will make the client no longer able to open any container.
 - Fixed a bug where the speed of the player would be incorrect in some special cases.
@@ -60,7 +63,7 @@ Unless otherwise specified, any version comparison below is the comparison of th
 
 # 0.10.2 (API 0.19.0) - 2025/12/22
 
-<small>[Compare with 0.10.1](https://github.com/AllayMC/Allay/compare/0.10.1...0.10.2)</small>
+<small>[Compare with 0.10.1](https://github.com/AllayPlus/AllayPlus/compare/0.10.1...0.10.2)</small>
 
 ### Added
 
