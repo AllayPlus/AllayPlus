@@ -14,23 +14,19 @@ import org.allaymc.server.component.ComponentProvider;
 import java.util.List;
 
 public class EntityPlayerImpl extends EntityImpl implements EntityPlayer {
-
+  
+    @Delegate
+    private EntityPlayerBaseComponent playerBaseComponent;
     @Getter
     @Delegate
-    protected EntityContainerHolderComponent containerHolderComponent;
+    private EntityContainerHolderComponent containerHolderComponent;
     @Delegate
-    protected EntityLivingComponent livingComponent;
+    private EntityLivingComponent livingComponent;
     @Getter
     @Delegate
-    protected EntityPhysicsComponent physicsComponent;
+    private EntityPhysicsComponent physicsComponent;
 
     public EntityPlayerImpl(EntityInitInfo initInfo, List<ComponentProvider<? extends Component>> componentProviders) {
         super(initInfo, componentProviders);
-    }
-
-    @Delegate
-    @Override
-    public EntityPlayerBaseComponent getBaseComponent() {
-        return (EntityPlayerBaseComponent) super.getBaseComponent();
     }
 }
