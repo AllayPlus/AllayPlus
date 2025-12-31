@@ -28,6 +28,7 @@ Unless otherwise specified, any version comparison below is the comparison of th
   - (API) Added `SidedContainer` interface to represent a container that restricts insertion/extraction by side.
   - (API) Added `ContainerItemPickupEvent` for item entity pickups into containers.
   - (API) Added `ContainerTypes.HOPPER`.
+  - (API) Added methods `ChunkLoader.isWorldViewer()` and `ChunkLoader.toWorldViewer()`.
 - (API) Added events `PlayerBedEnterEvent` and `PlayerBedLeaveEvent`.
 - Added properties `network-settings.raknet-send-cookie` and `network-settings.raknet-max-mtu` to `server.properties`.
 - Implemented Totem of Undying.
@@ -48,8 +49,7 @@ Unless otherwise specified, any version comparison below is the comparison of th
 ### Fixed
 
 - (API) Fixed method `Container.removeAllViewers()` won't remove all viewers from the container.
-- Fixed a bug where a player teleporting into another player's loaded area would not be visible to that player. Introduced methods
-  `ChunkLoader.isWorldViewer()` and `ChunkLoader.toWorldViewer()`.
+- Fixed a bug where a player teleporting into another player's loaded area would not be visible to that player.
 - Fixed a bug where the jukebox could not eject music discs.
 - `RAK_SEND_COOKIE` is set to `true` by default in `AllayNetworkInterface` to resolve connection issue.
 - Fixed a bug where calling method `Container.removeViewer()` server-side will make the client no longer able to open any container.
