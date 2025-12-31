@@ -20,7 +20,6 @@ import org.allaymc.api.entity.interfaces.EntityLiving;
 import org.allaymc.api.entity.interfaces.EntityPlayer;
 import org.allaymc.api.item.ItemStack;
 import org.allaymc.api.item.enchantment.EnchantmentTypes;
-import org.allaymc.api.item.interfaces.ItemAirStack;
 import org.allaymc.api.math.MathUtils;
 import org.allaymc.api.player.GameMode;
 import org.allaymc.api.utils.identifier.Identifier;
@@ -29,6 +28,7 @@ import org.allaymc.server.block.component.event.*;
 import org.allaymc.server.component.ComponentManager;
 import org.allaymc.server.component.annotation.Manager;
 import org.allaymc.server.registry.InternalRegistries;
+import org.allaymc.server.utils.ContainerUtils;
 import org.joml.Vector3ic;
 
 import java.util.Set;
@@ -222,7 +222,7 @@ public class BlockBaseComponentImpl implements BlockBaseComponent {
         if (usedItem != null && usedItem.hasEnchantment(EnchantmentTypes.SILK_TOUCH)) {
             // Silk Touch, directly drop the block itself
             var drop = getSilkTouchDrop(block);
-            insertIntoContainer(drop, hopperContainer);
+            ContainerUtils.insertIntoContainer(drop, hopperContainer, Integer.MAX_VALUE, null, null);
             if (drop.getCount() > 0) {
                 dimension.dropItem(drop, dropPos);
             }
@@ -231,7 +231,7 @@ public class BlockBaseComponentImpl implements BlockBaseComponent {
 
         var drops = getDrops(block, usedItem, entity);
         for (var drop : drops) {
-            insertIntoContainer(drop, hopperContainer);
+            ContainerUtils.insertIntoContainer(drop, hopperContainer, Integer.MAX_VALUE, null, null);
             if (drop.getCount() > 0) {
                 dimension.dropItem(drop, dropPos);
             }
@@ -273,53 +273,5 @@ public class BlockBaseComponentImpl implements BlockBaseComponent {
         }
 
         return hopper.getContainer();
-    }
-
-    private static void insertIntoContainer(ItemStack sourceStack, Container target) {
-        if (target == null || sourceStack == null || sourceStack == ItemAirStack.AIR_STACK) {
-            return;
-        }
-        if (sourceStack.getCount() <= 0 || target.isFull()) {
-            return;
-        }
-
-        int remaining = sourceStack.getCount();
-        int movedCount = 0;
-        var stacks = target.getItemStackArray();
-        for (int slot = 0; slot < stacks.length; slot++) {
-            if (remaining <= 0) {
-                break;
-            }
-
-            var targetStack = target.getItemStack(slot);
-            int maxStackSize = sourceStack.getItemType().getItemData().maxStackSize();
-            if (targetStack == ItemAirStack.AIR_STACK) {
-                int moveCount = Math.min(remaining, maxStackSize);
-                var newStack = sourceStack.copy();
-                newStack.setCount(moveCount);
-                target.setItemStack(slot, newStack);
-                movedCount += moveCount;
-                remaining = sourceStack.getCount() - movedCount;
-                continue;
-            }
-
-            if (targetStack.canMerge(sourceStack, true) && !targetStack.isFull()) {
-                int targetMax = targetStack.getItemType().getItemData().maxStackSize();
-                int space = targetMax - targetStack.getCount();
-                if (space <= 0) {
-                    continue;
-                }
-
-                int moveCount = Math.min(remaining, space);
-                targetStack.increaseCount(moveCount);
-                target.notifySlotChange(slot);
-                movedCount += moveCount;
-                remaining = sourceStack.getCount() - movedCount;
-            }
-        }
-
-        if (movedCount > 0) {
-            sourceStack.reduceCount(movedCount);
-        }
     }
 }

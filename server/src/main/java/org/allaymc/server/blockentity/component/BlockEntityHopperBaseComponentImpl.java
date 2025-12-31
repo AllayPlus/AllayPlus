@@ -20,6 +20,7 @@ import org.allaymc.api.item.interfaces.ItemAirStack;
 import org.allaymc.api.math.position.Position3i;
 import org.allaymc.api.math.position.Position3ic;
 import org.allaymc.server.component.annotation.ComponentObject;
+import org.allaymc.server.utils.ContainerUtils;
 import org.cloudburstmc.nbt.NbtMap;
 import org.joml.primitives.AABBd;
 import org.joml.primitives.AABBdc;
@@ -273,74 +274,13 @@ public class BlockEntityHopperBaseComponentImpl extends BlockEntityBaseComponent
 
     protected int insertIntoContainer(ItemStack sourceStack, Container target, int maxMoveCount, int[] allowedSlots,
                                       Container sourceContainer, int sourceSlot, EntityItem pickupEntity) {
-        if (sourceStack == null || sourceStack == ItemAirStack.AIR_STACK || maxMoveCount <= 0) {
-            return 0;
-        }
-
-        int remaining = Math.min(sourceStack.getCount(), maxMoveCount);
-        int movedCount = 0;
-
-        if (allowedSlots == null) {
-            var size = target.getItemStackArray().length;
-            for (int slot = 0; slot < size; slot++) {
-                if (remaining <= 0) {
-                    break;
-                }
-
-                movedCount += tryMoveToSlot(target, sourceStack, slot, remaining, sourceContainer, sourceSlot, pickupEntity);
-                remaining = Math.min(sourceStack.getCount(), maxMoveCount) - movedCount;
-            }
-        } else {
-            for (int slot : allowedSlots) {
-                if (remaining <= 0) {
-                    break;
-                }
-
-                movedCount += tryMoveToSlot(target, sourceStack, slot, remaining, sourceContainer, sourceSlot, pickupEntity);
-                remaining = Math.min(sourceStack.getCount(), maxMoveCount) - movedCount;
-            }
-        }
-
-        if (movedCount > 0) {
-            sourceStack.reduceCount(movedCount);
-        }
-        return movedCount;
-    }
-
-    protected int tryMoveToSlot(Container target, ItemStack sourceStack, int slot, int remaining,
-                                Container sourceContainer, int sourceSlot, EntityItem pickupEntity) {
-        var targetStack = target.getItemStack(slot);
-        int maxStackSize = sourceStack.getItemType().getItemData().maxStackSize();
-        if (targetStack == ItemAirStack.AIR_STACK) {
-            int moveCount = Math.min(remaining, maxStackSize);
-            if (!isMoveAllowed(sourceContainer, sourceSlot, pickupEntity, target, slot, sourceStack, moveCount)) {
-                return 0;
-            }
-
-            var newStack = sourceStack.copy();
-            newStack.setCount(moveCount);
-            target.setItemStack(slot, newStack);
-            return moveCount;
-        }
-
-        if (targetStack.canMerge(sourceStack, true) && !targetStack.isFull()) {
-            int targetMax = targetStack.getItemType().getItemData().maxStackSize();
-            int space = targetMax - targetStack.getCount();
-            if (space <= 0) {
-                return 0;
-            }
-
-            int moveCount = Math.min(remaining, space);
-            if (!isMoveAllowed(sourceContainer, sourceSlot, pickupEntity, target, slot, sourceStack, moveCount)) {
-                return 0;
-            }
-
-            targetStack.increaseCount(moveCount);
-            target.notifySlotChange(slot);
-            return moveCount;
-        }
-
-        return 0;
+        return ContainerUtils.insertIntoContainer(
+                sourceStack,
+                target,
+                maxMoveCount,
+                allowedSlots,
+                (container, slot, stack, moveCount) -> isMoveAllowed(sourceContainer, sourceSlot, pickupEntity, container, slot, stack, moveCount)
+        );
     }
 
     protected boolean isMoveAllowed(Container sourceContainer, int sourceSlot, EntityItem pickupEntity,
