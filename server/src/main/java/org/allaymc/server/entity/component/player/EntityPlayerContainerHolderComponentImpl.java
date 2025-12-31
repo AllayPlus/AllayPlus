@@ -126,13 +126,15 @@ public class EntityPlayerContainerHolderComponentImpl extends EntityContainerHol
 
         var location = thisPlayer.getLocation();
         var dimension = location.dimension();
+        double horizontalRange = 1.6;
+        double verticalRange = 1.55;
         var pickUpArea = new AABBd(
-                location.x() - 1.425,
-                location.y() - 1.425,
-                location.z() - 1.425,
-                location.x() + 1.425,
-                location.y() + 1.425,
-                location.z() + 1.425
+                location.x() - horizontalRange,
+                location.y() - verticalRange,
+                location.z() - horizontalRange,
+                location.x() + horizontalRange,
+                location.y() + verticalRange,
+                location.z() + horizontalRange
         );
 
         // Pick up items

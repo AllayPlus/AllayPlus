@@ -6,8 +6,11 @@ import org.allaymc.api.block.component.BlockBaseComponent;
 import org.allaymc.api.block.data.BlockFace;
 import org.allaymc.api.block.dto.Block;
 import org.allaymc.api.block.dto.PlayerInteractInfo;
+import org.allaymc.api.block.property.type.BlockPropertyTypes;
 import org.allaymc.api.block.type.BlockState;
 import org.allaymc.api.block.type.BlockType;
+import org.allaymc.api.blockentity.interfaces.BlockEntityHopper;
+import org.allaymc.api.container.Container;
 import org.allaymc.api.container.ContainerTypes;
 import org.allaymc.api.entity.Entity;
 import org.allaymc.api.entity.component.EntityContainerHolderComponent;
@@ -17,6 +20,7 @@ import org.allaymc.api.entity.interfaces.EntityLiving;
 import org.allaymc.api.entity.interfaces.EntityPlayer;
 import org.allaymc.api.item.ItemStack;
 import org.allaymc.api.item.enchantment.EnchantmentTypes;
+import org.allaymc.api.item.interfaces.ItemAirStack;
 import org.allaymc.api.math.MathUtils;
 import org.allaymc.api.player.GameMode;
 import org.allaymc.api.utils.identifier.Identifier;
@@ -214,15 +218,23 @@ public class BlockBaseComponentImpl implements BlockBaseComponent {
 
         var dropPos = MathUtils.center(block.getPosition());
         var dimension = block.getDimension();
+        var hopperContainer = getDirectHopperContainer(block);
         if (usedItem != null && usedItem.hasEnchantment(EnchantmentTypes.SILK_TOUCH)) {
             // Silk Touch, directly drop the block itself
-            dimension.dropItem(getSilkTouchDrop(block), dropPos);
+            var drop = getSilkTouchDrop(block);
+            insertIntoContainer(drop, hopperContainer);
+            if (drop.getCount() > 0) {
+                dimension.dropItem(drop, dropPos);
+            }
             return;
         }
 
         var drops = getDrops(block, usedItem, entity);
         for (var drop : drops) {
-            dimension.dropItem(drop, dropPos);
+            insertIntoContainer(drop, hopperContainer);
+            if (drop.getCount() > 0) {
+                dimension.dropItem(drop, dropPos);
+            }
         }
 
         var dropXpAmount = getDropXpAmount(block, usedItem, entity);
@@ -245,5 +257,69 @@ public class BlockBaseComponentImpl implements BlockBaseComponent {
         var event = new CBlockOnInteractEvent(itemStack, dimension, interactInfo, false);
         manager.callEvent(event);
         return event.isSuccess();
+    }
+
+    private static Container getDirectHopperContainer(Block block) {
+        var dimension = block.getDimension();
+        var belowPos = BlockFace.DOWN.offsetPos(block.getPosition());
+        var blockEntity = dimension.getBlockEntity(belowPos);
+        if (!(blockEntity instanceof BlockEntityHopper hopper)) {
+            return null;
+        }
+
+        var hopperState = dimension.getBlockState(belowPos);
+        if (hopperState.getPropertyValue(BlockPropertyTypes.TOGGLE_BIT)) {
+            return null;
+        }
+
+        return hopper.getContainer();
+    }
+
+    private static void insertIntoContainer(ItemStack sourceStack, Container target) {
+        if (target == null || sourceStack == null || sourceStack == ItemAirStack.AIR_STACK) {
+            return;
+        }
+        if (sourceStack.getCount() <= 0 || target.isFull()) {
+            return;
+        }
+
+        int remaining = sourceStack.getCount();
+        int movedCount = 0;
+        var stacks = target.getItemStackArray();
+        for (int slot = 0; slot < stacks.length; slot++) {
+            if (remaining <= 0) {
+                break;
+            }
+
+            var targetStack = target.getItemStack(slot);
+            int maxStackSize = sourceStack.getItemType().getItemData().maxStackSize();
+            if (targetStack == ItemAirStack.AIR_STACK) {
+                int moveCount = Math.min(remaining, maxStackSize);
+                var newStack = sourceStack.copy();
+                newStack.setCount(moveCount);
+                target.setItemStack(slot, newStack);
+                movedCount += moveCount;
+                remaining = sourceStack.getCount() - movedCount;
+                continue;
+            }
+
+            if (targetStack.canMerge(sourceStack, true) && !targetStack.isFull()) {
+                int targetMax = targetStack.getItemType().getItemData().maxStackSize();
+                int space = targetMax - targetStack.getCount();
+                if (space <= 0) {
+                    continue;
+                }
+
+                int moveCount = Math.min(remaining, space);
+                targetStack.increaseCount(moveCount);
+                target.notifySlotChange(slot);
+                movedCount += moveCount;
+                remaining = sourceStack.getCount() - movedCount;
+            }
+        }
+
+        if (movedCount > 0) {
+            sourceStack.reduceCount(movedCount);
+        }
     }
 }
