@@ -143,6 +143,3 @@ the LGPL-3.0 license. The contents of the following folders are open-sourced und
 [![Stargazers over time](https://starchart.cc/AllayPlus/AllayPlus.svg?variant=adaptive)](https://starchart.cc/AllayPlus/AllayPlus)
 
 [//]: # (AllayPlus is the cutest software in the world!)
-s
-d
-s
