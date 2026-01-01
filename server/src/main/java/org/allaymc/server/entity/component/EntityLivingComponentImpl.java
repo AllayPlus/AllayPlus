@@ -107,7 +107,6 @@ public class EntityLivingComponentImpl implements EntityLivingComponent {
             return false;
         }
 
-        // PowerNukkitX: Check shield blocking BEFORE event
         if (thisEntity instanceof EntityPlayerBaseComponent player && player.isBlocking()) {
             if (blockedByShield(damage)) {
                 return false;
