@@ -12,6 +12,7 @@ import org.cloudburstmc.protocol.bedrock.data.inventory.FullContainerName;
 import org.cloudburstmc.protocol.bedrock.data.inventory.itemstack.request.action.ItemStackRequestAction;
 import org.cloudburstmc.protocol.bedrock.data.inventory.itemstack.request.action.ItemStackRequestActionType;
 
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -106,5 +107,24 @@ public interface ContainerActionProcessor<T extends ItemStackRequestAction> {
         }
 
         return false;
+    }
+
+    static void tryResyncContainers(Player player, Container... containers) {
+        if (player == null || containers == null || containers.length == 0) {
+            return;
+        }
+
+        var sent = new IdentityHashMap<Container, Boolean>();
+        for (var container : containers) {
+            if (container == null || sent.put(container, Boolean.TRUE) != null) {
+                continue;
+            }
+
+            try {
+                player.viewContents(container);
+            } catch (RuntimeException ignored) {
+                // If the container isn't opened, we can't resync it here.
+            }
+        }
     }
 }

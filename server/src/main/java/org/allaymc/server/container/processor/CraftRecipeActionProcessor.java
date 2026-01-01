@@ -56,23 +56,27 @@ public class CraftRecipeActionProcessor implements ContainerActionProcessor<Craf
         }
 
         // Check if the player opened a valid container
-        var openedContainers = player.getOpenedContainers();
-        if (openedContainers.size() != 1) {
-            log.warn("Received a CraftRecipeAction with incorrect number ({}) of opened containers!", openedContainers.size());
+        RecipeContainer recipeContainer;
+        if (isCraftingRecipe) {
+            var craftingTable = player.getOpenedContainer(ContainerTypes.CRAFTING_TABLE);
+            recipeContainer = craftingTable != null
+                    ? craftingTable
+                    : player.getControlledEntity().getContainer(ContainerTypes.CRAFTING_GRID);
+        } else if (recipe instanceof SmithingRecipe) {
+            recipeContainer = player.getOpenedContainer(ContainerTypes.SMITHING_TABLE);
+        } else {
+            recipeContainer = null;
+        }
+
+        if (recipeContainer == null) {
+            log.warn("Received a CraftRecipeAction without a valid opened container!");
             return error();
         }
 
         // Check if the input matches the recipe
-        var openedContainer = openedContainers.toArray(Container[]::new)[0];
-        RecipeInput recipeInput;
-        if (openedContainer instanceof RecipeContainer recipeContainer) {
-            recipeInput = recipeContainer.createRecipeInput();
-            if (!recipe.match(recipeInput)) {
-                log.warn("Mismatched recipe! Recipe identifier: {}", recipe.getIdentifier());
-                return error();
-            }
-        } else {
-            log.warn("Received a CraftRecipeAction with an invalid container type {}!", openedContainer.getContainerType());
+        var recipeInput = recipeContainer.createRecipeInput();
+        if (!recipe.match(recipeInput)) {
+            log.warn("Mismatched recipe! Recipe identifier: {}", recipe.getIdentifier());
             return error();
         }
 

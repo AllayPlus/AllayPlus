@@ -28,16 +28,19 @@ public class DropActionProcessor implements ContainerActionProcessor<DropAction>
         var item = container.getItemStack(slot);
         if (failToValidateStackUniqueId(item.getUniqueId(), action.getSource().getStackNetworkId())) {
             log.warn("mismatch stack unique id!");
+            ContainerActionProcessor.tryResyncContainers(player, container);
             return error();
         }
 
         if (item == AIR_STACK) {
             log.warn("cannot throw an air!");
+            ContainerActionProcessor.tryResyncContainers(player, container);
             return error();
         }
 
         if (item.getCount() < count) {
             log.warn("cannot throw more items than the current amount!");
+            ContainerActionProcessor.tryResyncContainers(player, container);
             return error();
         }
 
