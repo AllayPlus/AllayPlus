@@ -124,6 +124,7 @@ public class EntityPlayerBaseComponentImpl extends EntityBaseComponentImpl imple
     @Getter
     protected boolean sprinting, sneaking, swimming, gliding, crawling, flying;
     protected boolean sleeping;
+    protected boolean blocking;
     protected Position3ic sleepingPos;
 
     @Override
@@ -547,6 +548,35 @@ public class EntityPlayerBaseComponentImpl extends EntityBaseComponentImpl imple
     @Override
     public long getItemUsingInAirTime(long currentTime) {
         return currentTime - this.startUsingItemInAirTime;
+    }
+
+    @Override
+    public boolean isBlocking() {
+        // PowerNukkitX style: Check both flag AND if shield is in hand/offhand
+        if (!blocking) {
+            return false;
+        }
+        
+        if (thisPlayer instanceof org.allaymc.api.entity.component.EntityContainerHolderComponent holder) {
+            if (holder.hasContainer(org.allaymc.api.container.ContainerTypes.OFFHAND)) {
+                var offhandItem = holder.getContainer(org.allaymc.api.container.ContainerTypes.OFFHAND).getItemStack(0);
+                if (offhandItem.getItemType().getIdentifier().equals(new org.allaymc.api.utils.identifier.Identifier("minecraft:shield"))) {
+                    return true;
+                }
+            }
+            if (holder.hasContainer(org.allaymc.api.container.ContainerTypes.INVENTORY)) {
+                var mainHandItem = holder.getContainer(org.allaymc.api.container.ContainerTypes.INVENTORY).getItemInHand();
+                if (mainHandItem.getItemType().getIdentifier().equals(new org.allaymc.api.utils.identifier.Identifier("minecraft:shield"))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void setBlocking(boolean blocking) {
+        this.blocking = blocking;
     }
 
     @Override

@@ -2,9 +2,11 @@ package org.allaymc.server.entity.component;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.allaymc.api.container.ContainerHolder;
 import org.allaymc.api.container.ContainerTypes;
 import org.allaymc.api.container.interfaces.ArmorContainer;
+import org.allaymc.api.container.interfaces.InventoryContainer;
 import org.allaymc.api.entity.Entity;
 import org.allaymc.api.entity.EntityState;
 import org.allaymc.api.entity.action.CriticalHit;
@@ -13,6 +15,7 @@ import org.allaymc.api.entity.action.SimpleEntityAction;
 import org.allaymc.api.entity.component.EntityContainerHolderComponent;
 import org.allaymc.api.entity.component.EntityLivingComponent;
 import org.allaymc.api.entity.component.EntityPhysicsComponent;
+import org.allaymc.api.entity.component.EntityPlayerBaseComponent;
 import org.allaymc.api.entity.damage.DamageContainer;
 import org.allaymc.api.entity.damage.DamageType;
 import org.allaymc.api.entity.effect.EffectInstance;
@@ -23,6 +26,7 @@ import org.allaymc.api.eventbus.EventHandler;
 import org.allaymc.api.eventbus.event.entity.*;
 import org.allaymc.api.item.enchantment.EnchantmentTypes;
 import org.allaymc.api.item.interfaces.ItemAirStack;
+import org.allaymc.api.item.ItemStack;
 import org.allaymc.api.math.MathUtils;
 import org.allaymc.api.utils.identifier.Identifier;
 import org.allaymc.api.world.gamerule.GameRule;
@@ -47,6 +51,7 @@ import static java.lang.Math.min;
 /**
  * @author daoge_cmd
  */
+@Slf4j
 public class EntityLivingComponentImpl implements EntityLivingComponent {
 
     @Identifier.Component
@@ -100,6 +105,13 @@ public class EntityLivingComponentImpl implements EntityLivingComponent {
             !canBeAttacked(damage) ||
             !checkAndUpdateCoolDown(damage, ignoreCoolDown)) {
             return false;
+        }
+
+        // PowerNukkitX: Check shield blocking BEFORE event
+        if (thisEntity instanceof EntityPlayerBaseComponent player && player.isBlocking()) {
+            if (blockedByShield(damage)) {
+                return false;
+            }
         }
 
         var event = new EntityDamageEvent(thisEntity, damage);
@@ -301,6 +313,80 @@ public class EntityLivingComponentImpl implements EntityLivingComponent {
 
         if (damage.isCritical()) {
             damage.updateFinalDamage(d -> d * 1.5f);
+        }
+    }
+
+    protected boolean blockedByShield(DamageContainer damage) {
+        if (!(thisEntity instanceof EntityPlayerBaseComponent player)) {
+            return false;
+        }
+        
+        if (!player.isBlocking()) {
+            return false;
+        }
+
+        if (!damage.canBeReducedByArmor() && damage.getDamageType() != DamageType.PROJECTILE) {
+            return false;
+        }
+
+        if (!(damage.getAttacker() instanceof Entity attacker)) {
+            return false;
+        }
+
+        var victimLoc = thisEntity.getLocation();
+        var attackerLoc = attacker.getLocation();
+        
+        var dx = victimLoc.x() - attackerLoc.x();
+        var dz = victimLoc.z() - attackerLoc.z();
+        
+        var length = Math.sqrt(dx * dx + dz * dz);
+        if (length < 0.0001) return false;
+        
+        var normalizedX = dx / length;
+        var normalizedZ = dz / length;
+        
+        var direction = MathUtils.getDirectionVector(victimLoc);
+        
+        var dotProduct = (normalizedX * direction.x) + (normalizedZ * direction.z);
+        
+        if (dotProduct < 0.0) {
+            
+            if (containerHolderComponent != null && containerHolderComponent.hasContainer(ContainerTypes.OFFHAND)) {
+                var offhandContainer = containerHolderComponent.getContainer(ContainerTypes.OFFHAND);
+                var offhandItem = offhandContainer.getItemStack(0);
+                
+                if (!(offhandItem instanceof ItemAirStack) && 
+                    offhandItem.getItemType().getIdentifier().equals(new Identifier("minecraft:shield"))) {
+                    
+                    var finalDamage = damage.getFinalDamage();
+                    var shieldDamage = finalDamage >= 3 ? (int) finalDamage + 1 : 1;
+                    
+                    offhandItem.setDamage(offhandItem.getDamage() + shieldDamage);
+                    
+                    if (offhandItem.getDamage() >= offhandItem.getMaxDamage()) {
+                        offhandContainer.setItemStack(0, ItemAirStack.AIR_STACK);
+                        damage.setBreakShield(true);
+                        player.setBlocking(false);
+                    } else {
+                        offhandContainer.setItemStack(0, offhandItem);
+                    }
+                    
+                    onBlock(attacker, damage, offhandItem, true);
+                    return true;
+                }
+            }
+            
+            return player.isBlocking();
+        }
+        
+        return false;
+    }
+
+    protected void onBlock(Entity attacker, DamageContainer damage, ItemStack shield, boolean animate) {
+        damage.setFinalDamage(0);
+        
+        if (animate && thisEntity.getDimension() != null) {
+            thisEntity.getDimension().addSound(thisEntity.getLocation(), new org.allaymc.api.world.sound.CustomSound(org.allaymc.api.world.sound.SoundNames.ITEM_SHIELD_BLOCK));
         }
     }
 

@@ -60,6 +60,17 @@ public class DamageContainer {
      */
     @Setter
     protected boolean enchanted;
+    /**
+     * Whether this damage should break the shield. If this value is {@code true}, the shield will be broken
+     * and a cooldown will be applied.
+     */
+    @Setter
+    protected boolean breakShield;
+    /**
+     * The cooldown ticks for the shield after it is broken. Default is 100 ticks (5 seconds).
+     */
+    @Setter
+    protected int shieldBreakCoolDown = 100;
 
     /**
      * Creates a new damage container.
@@ -266,5 +277,23 @@ public class DamageContainer {
      */
     public boolean canBeReducedByArmor() {
         return !CANNOT_BE_REDUCED_BY_ARMOR_DAMAGE_TYPES.contains(damageType);
+    }
+
+    /**
+     * Check if this damage should break the shield.
+     *
+     * @return {@code true} if the shield should be broken, otherwise {@code false}.
+     */
+    public boolean isBreakShield() {
+        return breakShield;
+    }
+
+    /**
+     * Get the shield break cooldown in ticks.
+     *
+     * @return the cooldown ticks
+     */
+    public int getShieldBreakCoolDown() {
+        return shieldBreakCoolDown;
     }
 }

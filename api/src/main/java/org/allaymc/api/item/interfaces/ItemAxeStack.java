@@ -5,4 +5,7 @@ import org.allaymc.api.item.component.ItemRepairableComponent;
 import org.allaymc.api.item.component.ItemToolComponent;
 
 public interface ItemAxeStack extends ItemStack, ItemToolComponent, ItemRepairableComponent {
+    default boolean canBreakShield() {
+        return true;
+    }
 }

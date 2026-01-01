@@ -637,6 +637,7 @@ public class AllayPlayer implements Player {
                 map.setFlag(EntityFlag.CRAWLING, player.isCrawling());
                 map.setFlag(EntityFlag.USING_ITEM, player.isUsingItemInAir());
                 map.setFlag(EntityFlag.SLEEPING, player.isSleeping());
+                map.setFlag(EntityFlag.BLOCKING, player.isBlocking());
                 byte playerFlags = 0;
                 if (player.isSleeping()) {
                     playerFlags |= PLAYER_FLAG_SLEEP;

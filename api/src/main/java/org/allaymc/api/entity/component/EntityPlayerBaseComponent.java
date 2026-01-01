@@ -202,6 +202,20 @@ public interface EntityPlayerBaseComponent extends EntityBaseComponent, ChunkLoa
     }
 
     /**
+     * Check if the player is blocking with a shield.
+     *
+     * @return {@code true} if the player is blocking, {@code false} otherwise.
+     */
+    boolean isBlocking();
+
+    /**
+     * Set whether the player is blocking with a shield.
+     *
+     * @param blocking {@code true} to enable blocking, {@code false} to disable
+     */
+    void setBlocking(boolean blocking);
+
+    /**
      * Get the skin of the player.
      *
      * @return the skin of the player, or {@code null} if the player has no custom skin (the skin will be Steve in that case)

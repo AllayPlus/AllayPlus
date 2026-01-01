@@ -8,6 +8,7 @@ import org.allaymc.api.block.data.BlockFace;
 import org.allaymc.api.block.dto.Block;
 import org.allaymc.api.block.type.BlockState;
 import org.allaymc.api.block.type.BlockTypes;
+import org.allaymc.api.container.ContainerTypes;
 import org.allaymc.api.eventbus.event.block.BlockBreakEvent;
 import org.allaymc.api.eventbus.event.player.PlayerJumpEvent;
 import org.allaymc.api.eventbus.event.player.PlayerPunchAirEvent;
@@ -327,8 +328,29 @@ public class PlayerAuthInputPacketProcessor extends PacketProcessor<PlayerAuthIn
         boolean sneaking = entity.isSneaking();
         for (var input : inputData) {
             switch (input) {
-                case START_SNEAKING -> sneaking = true;
-                case STOP_SNEAKING -> sneaking = false;
+                case START_SNEAKING -> {
+                    sneaking = true;
+                    // Check if player has shield in offhand to start blocking
+                    if (entity.hasContainer(ContainerTypes.OFFHAND)) {
+                        var offhandContainer = entity.getContainer(ContainerTypes.OFFHAND);
+                        var offhandItem = offhandContainer.getItemStack(0);
+                        log.debug("START_SNEAKING: Offhand item: {}, identifier: {}", 
+                            offhandItem.getClass().getSimpleName(),
+                            offhandItem.getItemType().getIdentifier());
+                        if (offhandItem.getItemType().getIdentifier().equals(new org.allaymc.api.utils.identifier.Identifier("minecraft:shield"))) {
+                            entity.setBlocking(true);
+                            log.debug("Player {} started BLOCKING with shield!", player.getOriginName());
+                        }
+                    }
+                }
+                case STOP_SNEAKING -> {
+                    sneaking = false;
+                    // Stop blocking when releasing sneak
+                    if (entity.isBlocking()) {
+                        entity.setBlocking(false);
+                        log.debug("Player {} stopped blocking", player.getOriginName());
+                    }
+                }
             }
         }
         return sneaking;
