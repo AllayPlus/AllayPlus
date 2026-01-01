@@ -17,7 +17,17 @@ public class BlockPackedIceBaseComponentImpl extends BlockIceBaseComponentImpl {
     }
 
     @Override
+    public void onRandomUpdate(Block block) {
+        // Packed ice (and blue ice) should not melt.
+    }
+
+    @Override
     public Set<ItemStack> getDrops(Block block, ItemStack usedItem, Entity entity) {
         return Set.of();
+    }
+
+    @Override
+    public boolean canRandomUpdate() {
+        return false;
     }
 }
