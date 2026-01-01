@@ -41,33 +41,39 @@ public abstract class TransferItemActionProcessor<T extends TransferItemStackReq
         var sourItem = sourceContainer.getItemStack(sourceSlot);
         if (sourItem.getItemType() == AIR) {
             log.warn("pick an air item is not allowed!");
+            ContainerActionProcessor.tryResyncContainers(player, sourceContainer, destinationContainer);
             return error();
         }
 
         if (failToValidateStackUniqueId(sourItem.getUniqueId(), sourceStackNetworkId)) {
             log.warn("mismatch source stack unique id!");
+            ContainerActionProcessor.tryResyncContainers(player, sourceContainer, destinationContainer);
             return error();
         }
 
         var count = action.getCount();
         if (sourItem.getCount() < count) {
             log.warn("place an item that has not enough count is not allowed");
+            ContainerActionProcessor.tryResyncContainers(player, sourceContainer, destinationContainer);
             return error();
         }
 
         var destItem = destinationContainer.getItemStack(destinationSlot);
         if (destItem.getItemType() != AIR && destItem.getItemType() != sourItem.getItemType()) {
             log.warn("place an item to a slot that has a different item is not allowed");
+            ContainerActionProcessor.tryResyncContainers(player, sourceContainer, destinationContainer);
             return error();
         }
 
         if (failToValidateStackUniqueId(destItem.getUniqueId(), destinationStackNetworkId)) {
             log.warn("mismatch destination stack unique id!");
+            ContainerActionProcessor.tryResyncContainers(player, sourceContainer, destinationContainer);
             return error();
         }
 
         if (destItem.getCount() + count > destItem.getItemType().getItemData().maxStackSize()) {
             log.warn("destination stack size bigger than the max stack size!");
+            ContainerActionProcessor.tryResyncContainers(player, sourceContainer, destinationContainer);
             return error();
         }
 
