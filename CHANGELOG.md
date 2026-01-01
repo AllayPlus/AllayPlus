@@ -50,6 +50,9 @@ Unless otherwise specified, any version comparison below is the comparison of th
 ### Fixed
 
 - (API) Fixed method `Container.removeAllViewers()` won't remove all viewers from the container.
+- Fixed packed/blue ice incorrectly melting into water.
+- Fixed inventory desync scenarios by resyncing containers after invalid transfer or drop requests.
+- Fixed 2x2 crafting recipes failing due to incorrect opened-container counting.
 - Fixed a bug where a player teleporting into another player's loaded area would not be visible to that player.
 - Fixed a bug where the jukebox could not eject music discs.
 - `RAK_SEND_COOKIE` is set to `true` by default in `AllayNetworkInterface` to resolve connection issue.
