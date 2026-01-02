@@ -43,6 +43,7 @@ public class EntityArrowPhysicsComponentImpl extends EntityProjectilePhysicsComp
 
     // Indicates whether the arrow has already hit a block
     protected boolean hitBlock;
+    // Remaining entity hits allowed for piercing arrows.
     protected int remainingPierceHits = -1;
     protected final LongSet piercedEntities = new LongOpenHashSet();
 
@@ -157,6 +158,7 @@ public class EntityArrowPhysicsComponentImpl extends EntityProjectilePhysicsComp
     private int getEffectivePierceLevel() {
         var level = arrowBaseComponent.getPierceLevel();
         if (level > 127) {
+            // Vanilla: piercing > 127 stops working.
             return 0;
         }
         return Math.max(0, level);

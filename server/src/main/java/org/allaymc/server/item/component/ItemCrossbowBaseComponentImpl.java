@@ -52,6 +52,7 @@ public class ItemCrossbowBaseComponentImpl extends ItemBaseComponentImpl {
     private boolean charged;
     private NbtMap chargedItem;
     private long lastLoadTick = -1;
+    // Number of projectiles to fire for the currently charged shot.
     private int launchCount = 1;
 
     public ItemCrossbowBaseComponentImpl(ItemStackInitInfo initInfo) {
@@ -127,6 +128,7 @@ public class ItemCrossbowBaseComponentImpl extends ItemBaseComponentImpl {
             }
         }
 
+        // Capture launch count at load time so the charged shot stays consistent.
         launchCount = getEnchantmentLevel(EnchantmentTypes.MULTISHOT) > 0 ? 3 : 1;
         setChargedItem(loadedItem.saveNBT());
         var world = player.getWorld();
