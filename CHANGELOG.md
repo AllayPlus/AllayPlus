@@ -17,6 +17,7 @@ Unless otherwise specified, any version comparison below is the comparison of th
 ### Added
 
 - (API) Added API for setting player hud element's visibility.
+- (API) Added pierce level getters/setters to `EntityArrowBaseComponent`.
 - (API) Added `Runnable` overloads to `Scheduler` for `scheduleDelayed`, `scheduleRepeating`, and `scheduleDelayedRepeating` methods.
 - (API) Added methods `WorldViewer.stopSound(String)` and `WorldViewer.stopAllSounds()`.
 - (API) Added method `Player.transfer()` to transfer the player to another server.
@@ -37,6 +38,10 @@ Unless otherwise specified, any version comparison below is the comparison of th
 - Implemented bed sleeping mechanics.
 - Added hostile mob proximity checks to block sleeping near danger.
 - Implemented commands `/playsound`, `/stopsound`, `/playanimation`, `/hud`, and `/particle`.
+- Implemented crossbow support (loading, charged state, and shooting).
+- Added crossbow enchantment mechanics: Quick Charge, Multishot, and Piercing.
+- Added charged crossbow launch-count persistence.
+- Added `ProjectileLaunchEvent` support for crossbow arrows.
 
 ### Changed
 

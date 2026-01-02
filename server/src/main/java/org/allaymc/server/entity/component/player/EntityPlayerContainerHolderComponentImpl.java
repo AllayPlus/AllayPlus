@@ -180,6 +180,7 @@ public class EntityPlayerContainerHolderComponentImpl extends EntityContainerHol
             }
 
             if (entityArrow.isPickUpDisabled()) {
+                entityArrow.remove();
                 continue;
             }
 
