@@ -35,8 +35,6 @@ public class EntityArrowBaseComponentImpl extends EntityProjectileBaseComponentI
     @Getter
     @Setter
     protected int pierceLevel;
-    @Getter
-    @Setter
     protected boolean infinite;
     @Getter
     @Setter
@@ -61,6 +59,16 @@ public class EntityArrowBaseComponentImpl extends EntityProjectileBaseComponentI
     public void setPotionType(PotionType potionType) {
         this.potionType = potionType;
         broadcastState();
+    }
+
+    @Override
+    public boolean isInfinite() {
+        return infinite;
+    }
+
+    @Override
+    public void setInfinite(boolean infinite) {
+        this.infinite = infinite;
     }
 
     @Override
