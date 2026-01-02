@@ -19,6 +19,7 @@ public class EntityArrowBaseComponentImpl extends EntityProjectileBaseComponentI
     protected static final String TAG_POWER_LEVEL = "enchantPower";
     protected static final String TAG_PUNCH_LEVEL = "enchantPunch";
     protected static final String TAG_INFINITY_LEVEL = "enchantInfinity";
+    protected static final String TAG_PIERCE_LEVEL = "PierceLevel";
     protected static final String TAG_POTION_ID = "auxValue";
     protected static final String TAG_SHOT_BY_PLAYER = "player";
 
@@ -33,6 +34,7 @@ public class EntityArrowBaseComponentImpl extends EntityProjectileBaseComponentI
     protected int punchLevel;
     @Getter
     @Setter
+    protected int pierceLevel;
     protected boolean infinite;
     @Getter
     @Setter
@@ -60,6 +62,16 @@ public class EntityArrowBaseComponentImpl extends EntityProjectileBaseComponentI
     }
 
     @Override
+    public boolean isInfinite() {
+        return infinite;
+    }
+
+    @Override
+    public void setInfinite(boolean infinite) {
+        this.infinite = infinite;
+    }
+
+    @Override
     public AABBdc getAABB() {
         return new AABBd(-0.025, 0.0, -0.025, 0.025, 0.05, 0.025);
     }
@@ -70,6 +82,7 @@ public class EntityArrowBaseComponentImpl extends EntityProjectileBaseComponentI
         nbt.listenForByte(TAG_POWER_LEVEL, b -> this.powerLevel = b);
         nbt.listenForByte(TAG_PUNCH_LEVEL, b -> this.punchLevel = b);
         nbt.listenForByte(TAG_INFINITY_LEVEL, b -> this.infinite = b != 0);
+        nbt.listenForByte(TAG_PIERCE_LEVEL, b -> this.pierceLevel = b);
         nbt.listenForBoolean(TAG_SHOT_BY_PLAYER, b -> this.pickUpDisabled = !b);
     }
 
@@ -80,6 +93,7 @@ public class EntityArrowBaseComponentImpl extends EntityProjectileBaseComponentI
                 .putByte(TAG_POWER_LEVEL, (byte) powerLevel)
                 .putByte(TAG_PUNCH_LEVEL, (byte) punchLevel)
                 .putByte(TAG_INFINITY_LEVEL, (byte) (infinite ? 1 : 0))
+                .putByte(TAG_PIERCE_LEVEL, (byte) pierceLevel)
                 .putBoolean(TAG_SHOT_BY_PLAYER, !pickUpDisabled);
 
         // Store this for vanilla map compatibility, although we don't need to save this

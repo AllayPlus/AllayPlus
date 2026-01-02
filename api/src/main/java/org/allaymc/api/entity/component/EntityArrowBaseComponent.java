@@ -64,6 +64,23 @@ public interface EntityArrowBaseComponent extends EntityBaseComponent {
     void setPunchLevel(int level);
 
     /**
+     * Gets the pierce level of the arrow. Pierce level allows the arrow to pass through entities.
+     *
+     * @return the pierce level of the arrow
+     */
+    default int getPierceLevel() {
+        return 0;
+    }
+
+    /**
+     * Sets the pierce level of the arrow. Pierce level allows the arrow to pass through entities.
+     *
+     * @param level the pierce level to set
+     */
+    default void setPierceLevel(int level) {
+    }
+
+    /**
      * Checks if the arrow is shot by a bow with infinity enchantment or the shooter is a creative player.
      * An infinite arrow cannot be picked up after being shot.
      *
