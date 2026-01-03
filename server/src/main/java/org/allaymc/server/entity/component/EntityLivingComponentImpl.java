@@ -2,6 +2,7 @@ package org.allaymc.server.entity.component;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.allaymc.api.container.Container;
 import org.allaymc.api.container.ContainerHolder;
 import org.allaymc.api.container.ContainerTypes;
 import org.allaymc.api.container.interfaces.ArmorContainer;
@@ -18,21 +19,33 @@ import org.allaymc.api.entity.damage.DamageType;
 import org.allaymc.api.entity.effect.EffectInstance;
 import org.allaymc.api.entity.effect.EffectType;
 import org.allaymc.api.entity.effect.EffectTypes;
+import org.allaymc.api.entity.interfaces.EntityArrow;
 import org.allaymc.api.entity.interfaces.EntityLiving;
+import org.allaymc.api.entity.interfaces.EntityPlayer;
+import org.allaymc.api.entity.interfaces.EntityProjectile;
+import org.allaymc.api.entity.interfaces.EntityWarden;
 import org.allaymc.api.eventbus.EventHandler;
 import org.allaymc.api.eventbus.event.entity.*;
+import org.allaymc.api.item.ItemHelper;
 import org.allaymc.api.item.enchantment.EnchantmentTypes;
 import org.allaymc.api.item.interfaces.ItemAirStack;
+import org.allaymc.api.item.type.ItemTypes;
 import org.allaymc.api.math.MathUtils;
 import org.allaymc.api.utils.identifier.Identifier;
 import org.allaymc.api.world.gamerule.GameRule;
 import org.allaymc.api.world.particle.SimpleParticle;
+import org.allaymc.api.world.sound.CustomSound;
+import org.allaymc.api.world.sound.SimpleSound;
+import org.allaymc.api.world.sound.SoundNames;
 import org.allaymc.server.component.ComponentClass;
 import org.allaymc.server.component.ComponentManager;
 import org.allaymc.server.component.annotation.ComponentObject;
 import org.allaymc.server.component.annotation.Dependency;
 import org.allaymc.server.component.annotation.Manager;
+import org.allaymc.server.container.impl.OffhandContainerImpl;
 import org.allaymc.server.entity.component.event.*;
+import org.allaymc.server.entity.component.player.EntityPlayerBaseComponentImpl;
+import org.allaymc.server.entity.impl.EntityPlayerImpl;
 import org.cloudburstmc.nbt.NbtMap;
 import org.cloudburstmc.nbt.NbtType;
 import org.joml.Vector3d;
@@ -51,6 +64,9 @@ public class EntityLivingComponentImpl implements EntityLivingComponent {
 
     @Identifier.Component
     public static final Identifier IDENTIFIER = new Identifier("minecraft:entity_living_component");
+
+    protected static final int SHIELD_DISABLE_TICKS = 100;
+    protected static final int SHIELD_STRONG_HIT_DAMAGE = 6;
 
     protected static final String TAG_ACTIVE_EFFECTS = "ActiveEffects";
     protected static final String TAG_FIRE = "Fire";
@@ -107,6 +123,10 @@ public class EntityLivingComponentImpl implements EntityLivingComponent {
 
         damage = event.getDamageContainer();
 
+        if (blockedByShield(damage)) {
+            return false;
+        }
+
         applyAttacker(damage);
         applyVictim(damage);
         applyDamage(damage);
@@ -152,6 +172,159 @@ public class EntityLivingComponentImpl implements EntityLivingComponent {
 
             physicsComponent.knockback(entity.getLocation(), kb, kby, additionalMotion);
         }
+    }
+
+    protected boolean blockedByShield(DamageContainer damage) {
+        if (!(thisEntity instanceof EntityPlayer player)) {
+            return false;
+        }
+
+        if (!player.isBlocking() || !isShieldBlockableDamage(damage)) {
+            return false;
+        }
+
+        var attackerObj = damage.getAttacker();
+        if (!isShieldBlockableAttacker(attackerObj)) {
+            return false;
+        }
+        var attacker = (Entity) attackerObj;
+
+        if (!isShieldFacingAttacker(player, attacker)) {
+            return false;
+        }
+
+        var disableAfterBlock = shouldDisableShield(player, attacker);
+
+        var shieldSlot = findShieldSlot(player);
+        if (shieldSlot == null) {
+            return false;
+        }
+
+        var shield = shieldSlot.container().getItemStack(shieldSlot.slot());
+        int durabilityDamage = 1;
+        if (damage.getFinalDamage() >= SHIELD_STRONG_HIT_DAMAGE) {
+            durabilityDamage = (int) Math.ceil(damage.getFinalDamage());
+        }
+
+        shield.tryIncreaseDamage(durabilityDamage);
+        var shieldBroken = shield.isBroken();
+        if (shieldBroken) {
+            shieldSlot.container().clearSlot(shieldSlot.slot());
+            player.getDimension().addSound(player.getLocation(), SimpleSound.ITEM_BREAK);
+            player.setBlocking(false);
+        } else {
+            shieldSlot.container().notifySlotChange(shieldSlot.slot());
+        }
+
+        player.getDimension().addSound(player.getLocation(), new CustomSound(SoundNames.ITEM_SHIELD_BLOCK));
+        if (player instanceof EntityPlayerImpl playerImpl) {
+            var baseComponent = (EntityPlayerBaseComponentImpl) playerImpl.getBaseComponent();
+            baseComponent.triggerShieldBlockAnimation(shieldBroken);
+        }
+        if (disableAfterBlock) {
+            applyShieldDisable(player);
+        }
+        applyShieldAttackerKnockback(player, attacker, damage);
+        return true;
+    }
+
+    protected boolean isShieldFacingAttacker(EntityPlayer player, Entity attacker) {
+        var playerLoc = player.getLocation();
+        var attackerLoc = attacker.getLocation();
+        var direction = MathUtils.getDirectionVector(playerLoc.yaw(), playerLoc.pitch()).setComponent(1, 0).normalize();
+        var normalizedVector = new Vector3d(playerLoc.x(), playerLoc.y(), playerLoc.z())
+                .sub(attackerLoc.x(), attackerLoc.y(), attackerLoc.z())
+                .normalize();
+        return (normalizedVector.x * direction.x) + (normalizedVector.z * direction.z) < 0.0;
+    }
+
+    protected boolean isShieldBlockableDamage(DamageContainer damage) {
+        return damage.canBeReducedByArmor();
+    }
+
+    protected boolean isShieldBlockableAttacker(Object attackerObj) {
+        if (!(attackerObj instanceof Entity)) {
+            return false;
+        }
+
+        if (attackerObj instanceof EntityArrow arrow && arrow.getPierceLevel() > 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected ShieldSlot findShieldSlot(EntityPlayer player) {
+        var offhand = player.getContainer(ContainerTypes.OFFHAND);
+        if (offhand != null && offhand.getItemStack(OffhandContainerImpl.OFFHAND_SLOT).getItemType() == ItemTypes.SHIELD) {
+            return new ShieldSlot(offhand, OffhandContainerImpl.OFFHAND_SLOT);
+        }
+
+        var inventory = player.getContainer(ContainerTypes.INVENTORY);
+        if (inventory == null) {
+            return null;
+        }
+
+        var handSlot = inventory.getHandSlot();
+        if (inventory.getItemStack(handSlot).getItemType() == ItemTypes.SHIELD) {
+            return new ShieldSlot(inventory, handSlot);
+        }
+
+        return null;
+    }
+
+    protected record ShieldSlot(Container container, int slot) {
+    }
+
+    protected boolean shouldDisableShield(EntityPlayer player, Entity attacker) {
+        if (attacker instanceof EntityWarden) {
+            return true;
+        }
+
+        if (attacker instanceof EntityPlayer attackerPlayer) {
+            return isHoldingAxe(attackerPlayer);
+        }
+
+        if (attacker instanceof EntityContainerHolderComponent component) {
+            if (!component.hasContainer(ContainerTypes.INVENTORY)) {
+                return false;
+            }
+            var inventory = component.getContainer(ContainerTypes.INVENTORY);
+            if (inventory == null) {
+                return false;
+            }
+            return ItemHelper.isAxe(inventory.getItemInHand().getItemType());
+        }
+
+        return false;
+    }
+
+    protected boolean isHoldingAxe(EntityPlayer player) {
+        var inventory = player.getContainer(ContainerTypes.INVENTORY);
+        if (inventory == null) {
+            return false;
+        }
+
+        return ItemHelper.isAxe(inventory.getItemInHand().getItemType());
+    }
+
+    protected void applyShieldDisable(EntityPlayer player) {
+        player.setShieldBlockingDelay(SHIELD_DISABLE_TICKS);
+        player.setCooldown("shield", SHIELD_DISABLE_TICKS, true);
+    }
+
+    protected void applyShieldAttackerKnockback(EntityPlayer player, Entity attacker, DamageContainer damage) {
+        if (damage.getDamageType() != DamageType.ENTITY_ATTACK) {
+            return;
+        }
+        if (attacker instanceof EntityProjectile) {
+            return;
+        }
+        if (!(attacker instanceof EntityLiving) || !(attacker instanceof EntityPhysicsComponent attackerPhysics)) {
+            return;
+        }
+
+        attackerPhysics.knockback(player.getLocation(), EntityPhysicsComponent.DEFAULT_KNOCKBACK);
     }
 
     protected boolean checkAndUpdateCoolDown(DamageContainer damage, boolean forceToUpdate) {

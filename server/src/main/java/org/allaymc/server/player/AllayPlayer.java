@@ -636,6 +636,13 @@ public class AllayPlayer implements Player {
                 map.setFlag(EntityFlag.GLIDING, player.isGliding());
                 map.setFlag(EntityFlag.CRAWLING, player.isCrawling());
                 map.setFlag(EntityFlag.USING_ITEM, player.isUsingItemInAir());
+                map.setFlag(EntityFlag.BLOCKING, player.isBlocking());
+                map.setFlag(EntityFlag.TRANSITION_BLOCKING, player.isBlocking());
+                if (player instanceof EntityPlayerImpl playerImpl) {
+                    var baseComponent = (EntityPlayerBaseComponentImpl) playerImpl.getBaseComponent();
+                    map.setFlag(EntityFlag.BLOCKED_USING_SHIELD, baseComponent.isShieldBlockAnimationActive());
+                    map.setFlag(EntityFlag.BLOCKED_USING_DAMAGED_SHIELD, baseComponent.isShieldDamagedAnimationActive());
+                }
                 map.setFlag(EntityFlag.SLEEPING, player.isSleeping());
                 byte playerFlags = 0;
                 if (player.isSleeping()) {

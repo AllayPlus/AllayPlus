@@ -69,6 +69,37 @@ public interface EntityPlayerBaseComponent extends EntityBaseComponent, ChunkLoa
     void setSneaking(boolean sneaking);
 
     /**
+     * Check if the player is blocking with a shield.
+     *
+     * @return {@code true} if the player is blocking, {@code false} otherwise
+     */
+    boolean isBlocking();
+
+    /**
+     * Set whether the player is blocking with a shield.
+     *
+     * @param blocking Whether the player should be blocking
+     */
+    void setBlocking(boolean blocking);
+
+    /**
+     * Get the remaining ticks before the player can block with a shield again.
+     * This is used for shield disable cooldowns (e.g., axe/warden hits).
+     *
+     * @return the remaining shield blocking delay in ticks
+     */
+    int getShieldBlockingDelay();
+
+    /**
+     * Set the remaining ticks before the player can block with a shield again.
+     * <p>
+     * Setting a positive delay will also clear the current blocking state.
+     *
+     * @param delay the remaining blocking delay in ticks
+     */
+    void setShieldBlockingDelay(@Range(from = 0, to = Integer.MAX_VALUE) int delay);
+
+    /**
      * Check if the player is swimming.
      *
      * @return {@code true} if the player is swimming, {@code false} otherwise.

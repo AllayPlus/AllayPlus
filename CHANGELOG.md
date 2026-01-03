@@ -23,6 +23,7 @@ Unless otherwise specified, any version comparison below is the comparison of th
 - (API) Added method `Player.transfer()` to transfer the player to another server.
 - (API) Added method `Entity.setImmobile()` to make the entity immobile.
 - (API) Added method `Container.isFull()` to check if a container is full.
+- (API) Added shield blocking state and cooldown accessors to `EntityPlayerBaseComponent`.
 - (API) Added method `BlockEntityChest.getDoubleChestContainer()` to get the container object to use when the chest is paired.
 - (API) Implemented hopper:
   - (API) Added `BlockEntityHopper` and related interfaces.
@@ -42,6 +43,7 @@ Unless otherwise specified, any version comparison below is the comparison of th
 - Added crossbow enchantment mechanics: Quick Charge, Multishot, and Piercing.
 - Added charged crossbow launch-count persistence.
 - Added `ProjectileLaunchEvent` support for crossbow arrows.
+- Implemented shield blocking mechanics and client animation flags.
 
 ### Changed
 

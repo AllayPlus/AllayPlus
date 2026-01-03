@@ -8,6 +8,7 @@ import org.allaymc.api.block.data.BlockFace;
 import org.allaymc.api.block.property.type.BlockPropertyTypes;
 import org.allaymc.api.block.type.BlockTypes;
 import org.allaymc.api.command.CommandSender;
+import org.allaymc.api.container.ContainerTypes;
 import org.allaymc.api.entity.EntityInitInfo;
 import org.allaymc.api.entity.action.EntityAction;
 import org.allaymc.api.entity.component.EntityPlayerBaseComponent;
@@ -27,6 +28,7 @@ import org.allaymc.api.player.GameMode;
 import org.allaymc.api.player.Player;
 import org.allaymc.api.player.Skin;
 import org.allaymc.api.server.Server;
+import org.allaymc.api.item.type.ItemTypes;
 import org.allaymc.api.utils.AllayNBTUtils;
 import org.allaymc.api.world.WorldState;
 import org.allaymc.api.world.WorldViewer;
@@ -38,6 +40,7 @@ import org.allaymc.server.entity.component.EntityBaseComponentImpl;
 import org.allaymc.server.entity.component.event.CEntityAfterDamageEvent;
 import org.allaymc.server.entity.component.event.CEntityAttackEvent;
 import org.allaymc.server.entity.component.event.CPlayerGameModeChangeEvent;
+import org.allaymc.server.container.impl.OffhandContainerImpl;
 import org.allaymc.server.utils.BedUtils;
 import org.allaymc.server.world.AllayDimension;
 import org.cloudburstmc.math.vector.Vector3f;
@@ -88,6 +91,8 @@ public class EntityPlayerBaseComponentImpl extends EntityBaseComponentImpl imple
      * To reduce network traffic, we only update food data every 10 blocks of movement
      */
     protected static final int EXHAUSTION_MOVEMENT_THRESHOLD = 10;
+    protected static final int SHIELD_BLOCK_ANIMATION_TICKS = 4;
+    protected static final int SHIELD_RAISE_DELAY_TICKS = 5;
 
     @ComponentObject
     protected EntityPlayer thisPlayer;
@@ -123,6 +128,11 @@ public class EntityPlayerBaseComponentImpl extends EntityBaseComponentImpl imple
     protected String scoreTag;
     @Getter
     protected boolean sprinting, sneaking, swimming, gliding, crawling, flying;
+    protected boolean blocking;
+    protected int shieldBlockingDelay;
+    protected int shieldRaiseTicks;
+    protected int shieldBlockAnimationTicks;
+    protected int shieldDamagedAnimationTicks;
     protected boolean sleeping;
     protected Position3ic sleepingPos;
 
@@ -247,6 +257,7 @@ public class EntityPlayerBaseComponentImpl extends EntityBaseComponentImpl imple
             tickFood();
         }
 
+        tickShieldBlocking();
         tickPlayerDataAutoSave();
     }
 
@@ -282,6 +293,75 @@ public class EntityPlayerBaseComponentImpl extends EntityBaseComponentImpl imple
         if (currentFoodLevel <= 6 && thisPlayer.isSprinting()) {
             setSprinting(false);
         }
+    }
+
+    protected void tickShieldBlocking() {
+        if (shieldBlockingDelay > 0) {
+            shieldBlockingDelay--;
+        }
+
+        var wasShieldBlockAnimation = shieldBlockAnimationTicks > 0;
+        if (shieldBlockAnimationTicks > 0) {
+            shieldBlockAnimationTicks--;
+        }
+        var wasShieldDamagedAnimation = shieldDamagedAnimationTicks > 0;
+        if (shieldDamagedAnimationTicks > 0) {
+            shieldDamagedAnimationTicks--;
+        }
+        if ((wasShieldBlockAnimation && shieldBlockAnimationTicks == 0) ||
+            (wasShieldDamagedAnimation && shieldDamagedAnimationTicks == 0)) {
+            broadcastState();
+        }
+
+        if (shieldBlockingDelay > 0 || !sneaking || !hasShieldEquipped()) {
+            shieldRaiseTicks = 0;
+            if (blocking) {
+                setBlocking(false);
+            }
+            return;
+        }
+
+        if (blocking) {
+            shieldRaiseTicks = 0;
+            return;
+        }
+
+        if (shieldRaiseTicks > 0) {
+            shieldRaiseTicks--;
+            if (shieldRaiseTicks == 0) {
+                setBlocking(true);
+            }
+        } else {
+            shieldRaiseTicks = SHIELD_RAISE_DELAY_TICKS;
+        }
+    }
+
+    protected void updateShieldBlockingState() {
+        if (shieldBlockingDelay > 0 || !sneaking || !hasShieldEquipped()) {
+            shieldRaiseTicks = 0;
+            if (blocking) {
+                setBlocking(false);
+            }
+            return;
+        }
+
+        if (!blocking && shieldRaiseTicks == 0) {
+            shieldRaiseTicks = SHIELD_RAISE_DELAY_TICKS;
+        }
+    }
+
+    protected boolean hasShieldEquipped() {
+        var offhand = thisPlayer.getContainer(ContainerTypes.OFFHAND);
+        if (offhand != null && offhand.getItemStack(OffhandContainerImpl.OFFHAND_SLOT).getItemType() == ItemTypes.SHIELD) {
+            return true;
+        }
+
+        var inventory = thisPlayer.getContainer(ContainerTypes.INVENTORY);
+        if (inventory != null && inventory.getItemInHand().getItemType() == ItemTypes.SHIELD) {
+            return true;
+        }
+
+        return false;
     }
 
     protected void tickPlayerDataAutoSave() {
@@ -743,7 +823,58 @@ public class EntityPlayerBaseComponentImpl extends EntityBaseComponentImpl imple
 
             broadcastState();
             new PlayerToggleSneakEvent(thisPlayer, sneaking).call();
+            updateShieldBlockingState();
         }
+    }
+
+    @Override
+    public boolean isBlocking() {
+        return blocking;
+    }
+
+    @Override
+    public void setBlocking(boolean blocking) {
+        if (this.blocking == blocking) {
+            return;
+        }
+
+        this.blocking = blocking;
+        broadcastState();
+    }
+
+    @Override
+    public int getShieldBlockingDelay() {
+        return shieldBlockingDelay;
+    }
+
+    @Override
+    public void setShieldBlockingDelay(int delay) {
+        shieldBlockingDelay = Math.max(0, delay);
+        if (shieldBlockingDelay > 0) {
+            shieldRaiseTicks = 0;
+            if (blocking) {
+                setBlocking(false);
+            }
+            return;
+        }
+
+        updateShieldBlockingState();
+    }
+
+    public boolean isShieldBlockAnimationActive() {
+        return shieldBlockAnimationTicks > 0;
+    }
+
+    public boolean isShieldDamagedAnimationActive() {
+        return shieldDamagedAnimationTicks > 0;
+    }
+
+    public void triggerShieldBlockAnimation(boolean damaged) {
+        shieldBlockAnimationTicks = SHIELD_BLOCK_ANIMATION_TICKS;
+        if (damaged) {
+            shieldDamagedAnimationTicks = SHIELD_BLOCK_ANIMATION_TICKS;
+        }
+        broadcastState();
     }
 
     @Override
