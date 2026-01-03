@@ -1,3 +1,10 @@
+pluginManagement {
+    repositories {
+        maven("https://repo1.maven.org/maven2")
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = "AllayPlus"
 
 // include multi modules
