@@ -193,7 +193,7 @@ public class EntityLivingComponentImpl implements EntityLivingComponent {
             return false;
         }
 
-        var disableAfterBlock = shouldDisableShield(player, attacker);
+        var disableAfterBlock = shouldDisableShield(attacker);
 
         var shieldSlot = findShieldSlot(player);
         if (shieldSlot == null) {
@@ -276,7 +276,7 @@ public class EntityLivingComponentImpl implements EntityLivingComponent {
     protected record ShieldSlot(Container container, int slot) {
     }
 
-    protected boolean shouldDisableShield(EntityPlayer player, Entity attacker) {
+    protected boolean shouldDisableShield(Entity attacker) {
         if (attacker instanceof EntityWarden) {
             return true;
         }
