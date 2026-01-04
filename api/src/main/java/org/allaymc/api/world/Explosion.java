@@ -318,8 +318,7 @@ public class Explosion {
                     ));
             for (var affectedEntity : affectedEntities) {
                 var impact = impactMap.get(affectedEntity);
-                if (impact == 0.0) {
-                    continue;
+                if (impact == null || impact == 0) {                    continue;
                 }
 
                 if (affectedEntity instanceof EntityPhysicsComponent physicsComponent) {
