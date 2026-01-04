@@ -40,8 +40,10 @@ Each scheduler runs on a specific thread:
 
 - Server scheduler: runs on the server thread.
 - World scheduler: runs on the world thread.
-- Dimension scheduler: runs on the compute thread pool when `world-settings.tick-dimension-in-parallel` is set to `true`, otherwise runs on the world thread.
+- Dimension scheduler (sync tasks): runs on the compute thread pool when `world-settings.tick-dimension-in-parallel` is set to `true`, otherwise runs on the world thread.
 - Entity scheduler: runs on the thread of the entity's current dimension.
+
+Note: async tasks always run on the async executor (virtual thread pool), regardless of scheduler type.
 
 ### Server Scheduler (global, non-world work)
 
