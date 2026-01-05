@@ -72,9 +72,6 @@ public class EntityXpOrbBaseComponentImpl extends EntityPickableBaseComponentImp
 
         var damage = item.getDamage();
         var repairAmount = Math.min(damage, experienceValue * 2);
-        if (repairAmount <= 0) {
-            return experienceValue;
-        }
 
         item.setDamage(damage - repairAmount);
         target.container().notifySlotChange(target.slot());
