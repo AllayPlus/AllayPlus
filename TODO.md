@@ -1,5 +1,8 @@
 TODO
-- Enchantment: implement Piercing shield-bypass once shield mechanics exist.
-- Implement shield mechanics.
-- Enchantment: implement Mending.
-- Review API architecture.
+- [x] Enchantment: implement Piercing shield-bypass once shield mechanics exist.
+- [x] Implement shield mechanics.
+- [ ] Enchantment: implement Mending.
+- [ ] Mage.
+- [ ] Fishing.
+- [ ] Enchantments.
+- [ ] Review API architecture.

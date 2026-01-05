@@ -45,6 +45,7 @@ Unless otherwise specified, any version comparison below is the comparison of th
 - Added charged crossbow launch-count persistence.
 - Added `ProjectileLaunchEvent` support for crossbow arrows.
 - Implemented shield blocking mechanics and client animation flags.
+- Implemented mending repairs from experience orbs for equipped items.
 
 ### Changed
 
