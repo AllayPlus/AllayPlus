@@ -66,7 +66,6 @@ public class AllayWorld implements World {
     protected final Semaphore networkSemaphore;
 
     protected final AtomicReference<WorldState> state;
-    @Getter
     protected final Int2ObjectOpenHashMap<Dimension> dimensionMap;
     @Getter
     protected final Scheduler scheduler;
@@ -205,13 +204,14 @@ public class AllayWorld implements World {
         tickSleep();
         scheduler.tick();
 
-        if (TICK_DIMENSION_IN_PARALLEL) {
+        var dimensions = dimensionMap.values();
+        if (TICK_DIMENSION_IN_PARALLEL && dimensions.size() > 1) {
             Utils.forEachInParallel(
-                    dimensionMap.values(), Server.getInstance().getComputeThreadPool(),
+                    dimensions, Server.getInstance().getComputeThreadPool(),
                     dimension -> ((AllayDimension) dimension).tick(currentTick)
             ).join();
         } else {
-            for (var dimension : dimensionMap.values()) {
+            for (var dimension : dimensions) {
                 ((AllayDimension) dimension).tick(currentTick);
             }
         }

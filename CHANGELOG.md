@@ -54,6 +54,7 @@ Unless otherwise specified, any version comparison below is the comparison of th
 - (API) `EntityEnderCrystal` now extends `EntityLiving` and `EntityEnderCrystalBaseComponent` interfaces.
 - Entity's display name is now default to the title case. For example: `minecraft:arrow` -> `Arrow`.
 - List plugin command (`/plugin list`) now will show the plugin version.
+- Parallel dimension ticking now runs only when a world has more than one dimension.
 
 ### Fixed
 
