@@ -69,9 +69,6 @@ public class EntityXpOrbBaseComponentImpl extends EntityPickableBaseComponentImp
 
         var target = targets.get(ThreadLocalRandom.current().nextInt(targets.size()));
         var item = target.container().getItemStack(target.slot());
-        if (!isMendingTarget(item)) {
-            return experienceValue;
-        }
 
         var damage = item.getDamage();
         var repairAmount = Math.min(damage, experienceValue * 2);

@@ -1,7 +1,7 @@
 TODO
 - [x] Enchantment: implement Piercing shield-bypass once shield mechanics exist.
 - [x] Implement shield mechanics.
-- [ ] Enchantment: implement Mending.
+- [x] Enchantment: implement Mending.
 - [ ] Mage.
 - [ ] Fishing.
 - [ ] Enchantments.
