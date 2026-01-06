@@ -213,6 +213,12 @@ public interface EntityPhysicsComponent extends EntityComponent {
     double getFallDistance();
 
     /**
+     * Reset the fall distance of this entity to zero.
+     */
+    default void resetFallDistance() {
+    }
+
+    /**
      * Called when the entity falls.
      */
     @ApiStatus.OverrideOnly
