@@ -51,6 +51,8 @@ public interface EntityPhysicsComponent extends EntityComponent {
 
     /**
      * Set the motion of this entity.
+     * <p>
+     * This method is expected to be called on the world thread.
      *
      * @param motion the motion to set
      * @return {@code true} if motion is applied (not cancelled), {@code false} otherwise.
@@ -77,6 +79,8 @@ public interface EntityPhysicsComponent extends EntityComponent {
 
     /**
      * Add the motion to this entity.
+     * <p>
+     * This method is expected to be called on the world thread.
      *
      * @param add the motion to add
      */
@@ -86,6 +90,8 @@ public interface EntityPhysicsComponent extends EntityComponent {
 
     /**
      * Add the motion to this entity.
+     * <p>
+     * This method is expected to be called on the world thread.
      *
      * @param mx the motion x to add
      * @param my the motion y to add
@@ -258,7 +264,7 @@ public interface EntityPhysicsComponent extends EntityComponent {
      * @param source                    the source of the knockback
      * @param kb                        the knockback strength to apply
      * @param kby                       the knockback strength in y-axis
-     * @param additionalMotion          the additional motion that will be appiled to the entity
+     * @param additionalMotion          the additional motion that will be applied to the entity
      * @param ignoreKnockbackResistance {@code true} if the knockback resistance should be ignored
      */
     void knockback(Vector3dc source, double kb, double kby, Vector3dc additionalMotion, boolean ignoreKnockbackResistance);
@@ -275,6 +281,9 @@ public interface EntityPhysicsComponent extends EntityComponent {
      * how resistant the entity is to being pushed or knocked back due to external forces,
      * such as attacks or collisions. Higher values provide increased resistance while
      * lower values allow for easier displacement.
+     * <p>
+     * This method is expected to be called on the world thread. Out-of-range values
+     * will be clamped to {@code [0, 1]}.
      *
      * @param knockbackResistance the knockback resistance value to set. Must be a float
      *                            value between 0.0 (no resistance) and 1.0 (full resistance).
