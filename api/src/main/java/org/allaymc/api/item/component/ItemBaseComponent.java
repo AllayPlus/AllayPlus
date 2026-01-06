@@ -362,6 +362,17 @@ public interface ItemBaseComponent extends ItemComponent, PersistentDataHolder {
     float calculateAttackDamage();
 
     /**
+     * Calculates the attack damage with attacker and target context.
+     *
+     * @param attacker the attacking entity
+     * @param target   the target entity
+     * @return the attack damage value
+     */
+    default float calculateAttackDamage(Entity attacker, Entity target) {
+        return calculateAttackDamage();
+    }
+
+    /**
      * Checks for a specific enchantment.
      *
      * @param enchantmentType the {@link EnchantmentType}

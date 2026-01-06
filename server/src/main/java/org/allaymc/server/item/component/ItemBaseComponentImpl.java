@@ -423,6 +423,11 @@ public class ItemBaseComponentImpl implements ItemBaseComponent {
     }
 
     @Override
+    public float calculateAttackDamage(Entity attacker, Entity target) {
+        return calculateAttackDamage();
+    }
+
+    @Override
     public boolean hasEnchantment(EnchantmentType enchantmentType) {
         return enchantments.containsKey(enchantmentType);
     }
