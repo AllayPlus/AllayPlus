@@ -24,6 +24,7 @@ Unless otherwise specified, any version comparison below is the comparison of th
 - (API) Added method `Entity.setImmobile()` to make the entity immobile.
 - (API) Added method `Container.isFull()` to check if a container is full.
 - (API) Added shield blocking state and cooldown accessors to `EntityPlayerBaseComponent`.
+- (API) Added `EntityPhysicsComponent.resetFallDistance()`.
 - (API) Added method `BlockEntityChest.getDoubleChestContainer()` to get the container object to use when the chest is paired.
 - (API) Implemented hopper:
   - (API) Added `BlockEntityHopper` and related interfaces.
