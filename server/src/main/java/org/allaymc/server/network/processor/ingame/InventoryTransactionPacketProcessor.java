@@ -182,7 +182,7 @@ public class InventoryTransactionPacketProcessor extends PacketProcessor<Invento
                             return;
                         }
 
-                        var damage = itemInHand.calculateAttackDamage();
+                        var damage = itemInHand.calculateAttackDamage(entity, target);
                         if (damage == 0) {
                             damage = 1;
                         }
