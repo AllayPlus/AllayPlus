@@ -11,14 +11,9 @@ import java.util.Set;
 /**
  * @author IWareQ
  */
-public class BlockPackedIceBaseComponentImpl extends BlockIceBaseComponentImpl {
-    public BlockPackedIceBaseComponentImpl(BlockType<? extends BlockBehavior> blockType) {
+public class BlockHardIceBaseComponentImpl extends BlockIceBaseComponentImpl {
+    public BlockHardIceBaseComponentImpl(BlockType<? extends BlockBehavior> blockType) {
         super(blockType);
-    }
-
-    @Override
-    public void onRandomUpdate(Block block) {
-        // Packed ice (and blue ice) should not melt.
     }
 
     @Override
