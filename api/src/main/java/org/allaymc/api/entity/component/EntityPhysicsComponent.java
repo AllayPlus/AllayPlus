@@ -221,8 +221,7 @@ public interface EntityPhysicsComponent extends EntityComponent {
     /**
      * Reset the fall distance of this entity to zero.
      */
-    default void resetFallDistance() {
-    }
+    void resetFallDistance();
 
     /**
      * Called when the entity falls.
