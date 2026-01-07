@@ -1435,6 +1435,7 @@ public class AllayPlayer implements Player {
             case SimpleParticle.DUST_PLUME -> packet.setType(ParticleType.DUST_PLUME);
             case SimpleParticle.WHITE_SMOKE -> packet.setType(ParticleType.WHITE_SMOKE);
             case SimpleParticle.FIREWORK_CONTRAIL -> packet.setType(ParticleType.FIREWORKS);
+            case SimpleParticle.SMASH_ATTACK_GROUND_DUST -> packet.setType(LevelEvent.PARTICLE_SMASH_ATTACK_GROUND_DUST);
             case CustomParticle pa -> {
                 var pk = new SpawnParticleEffectPacket();
                 pk.setDimensionId(this.controlledEntity.getDimension().getDimensionInfo().dimensionId());
