@@ -876,6 +876,16 @@ public final class ItemTypeInitializer {
                 .build();
     }
 
+    public static void initMace() {
+        ItemTypes.MACE = AllayItemType
+                .builder(ItemMaceStackImpl.class)
+                .vanillaItem(ItemId.MACE)
+                .addComponent(ItemMaceBaseComponentImpl::new, ItemMaceBaseComponentImpl.class)
+                .addComponent(ItemSwordToolComponentImpl::new, ItemSwordToolComponentImpl.class)
+                .addComponent(() -> new ItemRepairableComponentImpl(ItemId.BREEZE_ROD), ItemRepairableComponentImpl.class)
+                .build();
+    }
+
     public static void initBed() {
         ItemTypes.BED = AllayItemType
                 .builder(ItemBedStackImpl.class)

@@ -46,6 +46,7 @@ Unless otherwise specified, any version comparison below is the comparison of th
 - Added crossbow enchantment mechanics: Quick Charge, Multishot, and Piercing.
 - Added charged crossbow launch-count persistence.
 - Added `ProjectileLaunchEvent` support for crossbow arrows.
+- Implemented mace smash attacks with fall-based damage and effects.
 - Implemented shield blocking mechanics and client animation flags.
 - Implemented mending repairs from experience orbs for equipped items.
 
