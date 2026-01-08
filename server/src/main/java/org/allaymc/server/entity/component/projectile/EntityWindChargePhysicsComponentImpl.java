@@ -24,7 +24,7 @@ public class EntityWindChargePhysicsComponentImpl extends EntityProjectilePhysic
     private static final double KNOCKBACK_Y = 0.6;
     private static final double SELF_VERTICAL_ONLY_RANGE = 1.0;
     private static final double SELF_VERTICAL_ONLY_RANGE_SQUARED = SELF_VERTICAL_ONLY_RANGE * SELF_VERTICAL_ONLY_RANGE;
-    private static final double SELF_VERTICAL_KNOCKBACK_Y = 1.1;
+    private static final double SELF_VERTICAL_KNOCKBACK_Y = 1.008;
     private static final double SELF_VERTICAL_HORIZONTAL_DAMPING = 0.05;
 
     @Override
@@ -105,6 +105,7 @@ public class EntityWindChargePhysicsComponentImpl extends EntityProjectilePhysic
         } else {
             physicsComponent.knockback(source, getKnockbackStrength(), getKnockbackY());
         }
+        physicsComponent.resetFallDistance();
     }
 
     protected void playBurstEffect() {
@@ -155,6 +156,7 @@ public class EntityWindChargePhysicsComponentImpl extends EntityProjectilePhysic
         var baseY = Math.max(0.0, motion.y);
         motion.y = baseY * 0.5 + kby * factor;
         physicsComponent.setMotion(motion);
+        physicsComponent.resetFallDistance();
     }
 
     protected SimpleSound getBurstSound() {
