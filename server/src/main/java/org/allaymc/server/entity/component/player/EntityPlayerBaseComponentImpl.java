@@ -413,7 +413,7 @@ public class EntityPlayerBaseComponentImpl extends EntityBaseComponentImpl imple
             return true;
         }
 
-        return coolDown < getWorld().getTick();
+        return coolDown <= getWorld().getTick();
     }
 
     @Override

@@ -134,6 +134,10 @@ public enum SimpleSound implements Sound {
     POP,
     // EXPLOSION is a sound played when an explosion happens, such as from a creeper or TNT.
     EXPLOSION,
+    // WIND_CHARGE_BURST is a sound played when a wind charge bursts.
+    WIND_CHARGE_BURST,
+    // BREEZE_WIND_CHARGE_BURST is a sound played when a breeze wind charge bursts.
+    BREEZE_WIND_CHARGE_BURST,
     // THUNDER is a sound played when lightning strikes the ground.
     THUNDER,
     // LEVEL_UP is a sound played for a player whenever they level up.
@@ -155,4 +159,3 @@ public enum SimpleSound implements Sound {
     // PAINTING_PLACE is a sound played when a painting is placed.
     PAINTING_PLACE
 }
-

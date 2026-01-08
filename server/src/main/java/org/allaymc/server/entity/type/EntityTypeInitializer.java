@@ -181,6 +181,22 @@ public final class EntityTypeInitializer {
                 .addComponent(EntityProjectileComponentImpl::new, EntityProjectileComponentImpl.class)
                 .addComponent(() -> new EntityAgeComponentImpl(), EntityAgeComponentImpl.class)
                 .build();
+        EntityTypes.WIND_CHARGE_PROJECTILE = AllayEntityType
+                .builder(EntityWindChargeProjectileImpl.class)
+                .vanillaEntity(EntityId.WIND_CHARGE_PROJECTILE)
+                .addComponent(EntityProjectileBaseComponentImpl::new, EntityProjectileBaseComponentImpl.class)
+                .addComponent(EntityWindChargePhysicsComponentImpl::new, EntityWindChargePhysicsComponentImpl.class)
+                .addComponent(EntityProjectileComponentImpl::new, EntityProjectileComponentImpl.class)
+                .addComponent(() -> new EntityAgeComponentImpl(1200), EntityAgeComponentImpl.class)
+                .build();
+        EntityTypes.BREEZE_WIND_CHARGE_PROJECTILE = AllayEntityType
+                .builder(EntityBreezeWindChargeProjectileImpl.class)
+                .vanillaEntity(EntityId.BREEZE_WIND_CHARGE_PROJECTILE)
+                .addComponent(EntityProjectileBaseComponentImpl::new, EntityProjectileBaseComponentImpl.class)
+                .addComponent(EntityBreezeWindChargePhysicsComponentImpl::new, EntityBreezeWindChargePhysicsComponentImpl.class)
+                .addComponent(EntityProjectileComponentImpl::new, EntityProjectileComponentImpl.class)
+                .addComponent(() -> new EntityAgeComponentImpl(1200), EntityAgeComponentImpl.class)
+                .build();
         EntityTypes.SPLASH_POTION = AllayEntityType
                 .builder(EntitySplashPotionImpl.class)
                 .vanillaEntity(EntityId.SPLASH_POTION)

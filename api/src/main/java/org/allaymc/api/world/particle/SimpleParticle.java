@@ -24,6 +24,10 @@ public enum SimpleParticle implements Particle {
     EXPLODE,
     // HUGE_EXPLOSION is a particle shown when TNT or a creeper explodes.
     HUGE_EXPLOSION,
+    // WIND_EXPLOSION is a particle shown when a wind charge bursts.
+    WIND_EXPLOSION,
+    // BREEZE_WIND_EXPLOSION is a particle shown when a breeze wind charge bursts.
+    BREEZE_WIND_EXPLOSION,
     // ENDERMAN_TELEPORT is a particle that shows up when an enderman teleports or a player uses ender pearl.
     ENDERMAN_TELEPORT,
     // SNOWBALL_POOF is a particle shown when a snowball collides with something.

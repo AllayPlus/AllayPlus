@@ -1126,6 +1126,12 @@ public class AllayPlayer implements Player {
             case SimpleSound.EXPLOSION -> {
                 packet.setSound(SoundEvent.EXPLODE);
             }
+            case SimpleSound.WIND_CHARGE_BURST -> {
+                packet.setSound(SoundEvent.WIND_CHARGE_BURST);
+            }
+            case SimpleSound.BREEZE_WIND_CHARGE_BURST -> {
+                packet.setSound(SoundEvent.WIND_CHARGE_BURST);
+            }
             case SimpleSound.THUNDER -> {
                 packet.setSound(SoundEvent.THUNDER);
                 packet.setIdentifier("minecraft:lightning_bolt");
@@ -1424,6 +1430,8 @@ public class AllayPlayer implements Player {
         switch (particle) {
             case SimpleParticle.EXPLODE -> packet.setType(ParticleType.EXPLODE);
             case SimpleParticle.HUGE_EXPLOSION -> packet.setType(LevelEvent.PARTICLE_EXPLOSION);
+            case SimpleParticle.WIND_EXPLOSION -> packet.setType(ParticleType.WIND_EXPLOSION);
+            case SimpleParticle.BREEZE_WIND_EXPLOSION -> packet.setType(ParticleType.BREEZE_WIND_EXPLOSION);
             case SimpleParticle.BONE_MEAL -> packet.setType(LevelEvent.PARTICLE_CROP_GROWTH);
             case SimpleParticle.BLOCK_FORCE_FIELD -> packet.setType(LevelEvent.PARTICLE_DENY_BLOCK);
             case SimpleParticle.ENDERMAN_TELEPORT -> packet.setType(LevelEvent.PARTICLE_TELEPORT);
@@ -1438,9 +1446,10 @@ public class AllayPlayer implements Player {
             case SimpleParticle.FIREWORK_CONTRAIL -> packet.setType(ParticleType.FIREWORKS);
             case SimpleParticle.SMASH_ATTACK_GROUND_DUST -> packet.setType(LevelEvent.PARTICLE_SMASH_ATTACK_GROUND_DUST);
             case CustomParticle pa -> {
+                var particleName = pa.particleName();
                 var pk = new SpawnParticleEffectPacket();
                 pk.setDimensionId(this.controlledEntity.getDimension().getDimensionInfo().dimensionId());
-                pk.setIdentifier(pa.particleName());
+                pk.setIdentifier(particleName);
                 pk.setMolangVariablesJson(Optional.ofNullable(pa.moLangVariables()));
                 pk.setPosition(pos);
                 sendPacket(pk);

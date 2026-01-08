@@ -52,6 +52,7 @@ Unless otherwise specified, any version comparison below is the comparison of th
 - Implemented mace smash attacks with fall-based damage and effects.
 - Implemented shield blocking mechanics and client animation flags.
 - Implemented mending repairs from experience orbs for equipped items.
+- Implemented Wind Charge projectile behavior (including breeze variant) and Wind Charged death burst.
 
 ### Changed
 
