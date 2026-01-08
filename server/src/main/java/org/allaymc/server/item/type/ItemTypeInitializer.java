@@ -816,10 +816,10 @@ public final class ItemTypeInitializer {
                     @Override
                     public boolean shoot(Entity shooter) {
                         if (shooter instanceof EntityPlayer player) {
-                            if (!player.isCooldownEnd("wind_charge")) {
+                            if (!player.isCooldownEnd(ItemTypes.WIND_CHARGE)) {
                                 return false;
                             }
-                            player.setCooldown("wind_charge", 10, false);
+                            player.setCooldown(ItemTypes.WIND_CHARGE, 10, false);
                         }
                         return super.shoot(shooter);
                     }

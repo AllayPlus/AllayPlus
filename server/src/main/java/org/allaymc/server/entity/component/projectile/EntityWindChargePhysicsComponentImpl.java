@@ -48,23 +48,6 @@ public class EntityWindChargePhysicsComponentImpl extends EntityProjectilePhysic
             return false;
         }
 
-        var location = thisEntity.getLocation();
-        var newPos = new Location3d(location);
-        newPos.add(motion);
-
-        var dimension = thisEntity.getDimension();
-        var dimensionInfo = dimension.getDimensionInfo();
-        if (newPos.y() < dimensionInfo.minHeight() - 1 || newPos.y() > dimensionInfo.maxHeight() + 1) {
-            playBurstEffect();
-            thisEntity.remove();
-            return true;
-        }
-
-        if (dimension.getChunkManager().getChunkByDimensionPos((int) newPos.x(), (int) newPos.z()) == null) {
-            thisEntity.remove();
-            return true;
-        }
-
         return super.applyMotion();
     }
 
