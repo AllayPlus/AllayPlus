@@ -60,13 +60,10 @@ public class EntityWindChargePhysicsComponentImpl extends EntityProjectilePhysic
         if (other instanceof EntityLiving living) {
             var damage = DamageContainer.projectile(thisEntity, 1);
             damage.setHasKnockback(false);
-            if (living.attack(damage) && other instanceof EntityPhysicsComponent physicsComponent) {
-                applyKnockback(other, physicsComponent);
-            }
-        } else if (other instanceof EntityPhysicsComponent physicsComponent) {
-            applyKnockback(other, physicsComponent);
+            living.attack(damage);
         }
 
+        knockbackNearbyEntities();
         playBurstEffect();
         thisEntity.remove();
     }
