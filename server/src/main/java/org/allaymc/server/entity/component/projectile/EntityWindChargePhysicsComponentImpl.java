@@ -105,7 +105,6 @@ public class EntityWindChargePhysicsComponentImpl extends EntityProjectilePhysic
         } else {
             physicsComponent.knockback(source, getKnockbackStrength(), getKnockbackY());
         }
-        physicsComponent.resetFallDistance();
     }
 
     protected void playBurstEffect() {
@@ -153,7 +152,7 @@ public class EntityWindChargePhysicsComponentImpl extends EntityProjectilePhysic
         var motion = new Vector3d(physicsComponent.getMotion());
         motion.x *= SELF_VERTICAL_HORIZONTAL_DAMPING;
         motion.z *= SELF_VERTICAL_HORIZONTAL_DAMPING;
-        var baseY = Math.max(0.0, motion.y);
+        var baseY = motion.y;
         motion.y = baseY * 0.5 + kby * factor;
         physicsComponent.setMotion(motion);
         physicsComponent.resetFallDistance();
