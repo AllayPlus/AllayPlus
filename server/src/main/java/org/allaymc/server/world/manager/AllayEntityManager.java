@@ -104,8 +104,9 @@ public class AllayEntityManager implements EntityManager {
     }
 
     protected void processQueue() {
-        while (!queue.isEmpty()) {
-            queue.poll().run();
+        Runnable task;
+        while ((task = queue.poll()) != null) {
+            task.run();
         }
     }
 
