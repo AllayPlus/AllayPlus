@@ -16,6 +16,7 @@ Unless otherwise specified, any version comparison below is the comparison of th
 
 ### Added
 
+- Added `onIdle` callback and `wakeUp()` method to `GameLoop` class for event-driven idle processing.
 - (API) Added API for setting player hud element's visibility.
 - (API) Added pierce level getters/setters to `EntityArrowBaseComponent`.
 - (API) Added `Runnable` overloads to `Scheduler` for `scheduleDelayed`, `scheduleRepeating`, and `scheduleDelayedRepeating` methods.
@@ -56,6 +57,8 @@ Unless otherwise specified, any version comparison below is the comparison of th
 
 ### Changed
 
+- Merged world tick thread and network thread into a single thread using an event-driven wake-up mechanism. This simplifies
+  the threading model while maintaining low packet processing latency through `LockSupport.parkNanos/unpark`.
 - (API) Refactor and clean up the config util under `org.allaymc.api.config`. This refactor is backward-compatible and shouldn't affect any plugin.
 - (API) Added `ServerPlayerEvent` base class for all `Player` related events under `org.allaymc.api.eventbus.event.server` package.
 - (API) Made `AllayAPI.APIInstanceHolder<T>` public in allay-api by removing the `@ApiStatus.Internal` annotation.
@@ -81,6 +84,7 @@ Unless otherwise specified, any version comparison below is the comparison of th
 
 ### Removed
 
+- Removed `enableIndependentNetworkThread` configuration option from `server-settings.yml` as it is no longer necessary.
 - (API) Removed `@ApiStatus.OverrideOnly` annotation in `WorldStorage.shutdown()` method.
 
 # 0.10.2 (API 0.19.0) - 2025/12/22
