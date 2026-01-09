@@ -809,6 +809,22 @@ public final class ItemTypeInitializer {
                 .vanillaItem(ItemId.SNOWBALL)
                 .addComponent(() -> new ItemProjectileComponentImpl(EntityId.SNOWBALL, 1.5), ItemProjectileComponentImpl.class)
                 .build();
+        ItemTypes.WIND_CHARGE = AllayItemType
+                .builder(ItemWindChargeStackImpl.class)
+                .vanillaItem(ItemId.WIND_CHARGE)
+                .addComponent(() -> new ItemProjectileComponentImpl(EntityId.WIND_CHARGE_PROJECTILE, 1.5) {
+                    @Override
+                    public boolean shoot(Entity shooter) {
+                        if (shooter instanceof EntityPlayer player) {
+                            if (!player.isCooldownEnd(ItemTypes.WIND_CHARGE)) {
+                                return false;
+                            }
+                            player.setCooldown(ItemTypes.WIND_CHARGE, 10, false);
+                        }
+                        return super.shoot(shooter);
+                    }
+                }, ItemProjectileComponentImpl.class)
+                .build();
         ItemTypes.ENDER_PEARL = AllayItemType
                 .builder(ItemEnderPearlStackImpl.class)
                 .vanillaItem(ItemId.ENDER_PEARL)
