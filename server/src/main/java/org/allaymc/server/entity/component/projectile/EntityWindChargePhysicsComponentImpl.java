@@ -29,12 +29,12 @@ public class EntityWindChargePhysicsComponentImpl extends EntityProjectilePhysic
 
     @Override
     public boolean hasGravity() {
-        return false;
+        return true;
     }
 
     @Override
     public double getGravity() {
-        return 0.0;
+        return 0.01;
     }
 
     @Override
@@ -46,6 +46,23 @@ public class EntityWindChargePhysicsComponentImpl extends EntityProjectilePhysic
     public boolean applyMotion() {
         if (motion.lengthSquared() == 0) {
             return false;
+        }
+
+        var location = thisEntity.getLocation();
+        var newPos = new Location3d(location);
+        newPos.add(motion);
+
+        var dimension = thisEntity.getDimension();
+        var dimensionInfo = dimension.getDimensionInfo();
+        if (newPos.y() < dimensionInfo.minHeight() - 1 || newPos.y() > dimensionInfo.maxHeight() + 1) {
+            playBurstEffect();
+            thisEntity.remove();
+            return true;
+        }
+
+        if (dimension.getChunkManager().getChunkByDimensionPos((int) newPos.x(), (int) newPos.z()) == null) {
+            thisEntity.remove();
+            return true;
         }
 
         return super.applyMotion();
