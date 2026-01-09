@@ -24,7 +24,7 @@ public class EntityWindChargePhysicsComponentImpl extends EntityProjectilePhysic
     private static final double KNOCKBACK_Y = 0.6;
     private static final double SELF_VERTICAL_ONLY_RANGE = 1.0;
     private static final double SELF_VERTICAL_ONLY_RANGE_SQUARED = SELF_VERTICAL_ONLY_RANGE * SELF_VERTICAL_ONLY_RANGE;
-    private static final double SELF_VERTICAL_KNOCKBACK_Y = 1.099;
+    private static final double SELF_VERTICAL_KNOCKBACK_Y = 1.159;
     private static final double SELF_VERTICAL_HORIZONTAL_DAMPING = 0.05;
 
     @Override
@@ -34,7 +34,7 @@ public class EntityWindChargePhysicsComponentImpl extends EntityProjectilePhysic
 
     @Override
     public double getGravity() {
-        return 0.01;
+        return 0.0001;
     }
 
     @Override
