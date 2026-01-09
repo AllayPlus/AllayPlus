@@ -39,7 +39,7 @@ public class EntityWindChargePhysicsComponentImpl extends EntityProjectilePhysic
 
     @Override
     public double getDragFactorInAir() {
-        return 0.01;
+        return 0.0;
     }
 
     @Override
