@@ -56,11 +56,13 @@ public class EntityWindChargePhysicsComponentImpl extends EntityProjectilePhysic
         var dimensionInfo = dimension.getDimensionInfo();
         if (newPos.y() < dimensionInfo.minHeight() - 1 || newPos.y() > dimensionInfo.maxHeight() + 1) {
             playBurstEffect();
+            notifyRemoval("Out of world bounds");
             thisEntity.remove();
             return true;
         }
 
         if (dimension.getChunkManager().getChunkByDimensionPos((int) newPos.x(), (int) newPos.z()) == null) {
+            notifyRemoval("Entered unloaded chunk");
             thisEntity.remove();
             return true;
         }
@@ -177,5 +179,12 @@ public class EntityWindChargePhysicsComponentImpl extends EntityProjectilePhysic
 
     protected SimpleSound getBurstSound() {
         return SimpleSound.WIND_CHARGE_BURST;
+    }
+
+    protected void notifyRemoval(String reason) {
+        var shooter = projectileComponent.getShooter();
+        if (shooter instanceof EntityPlayer player) {
+            player.sendMessage("§c[WindCharge] §fRemoved: §7" + reason);
+        }
     }
 }
