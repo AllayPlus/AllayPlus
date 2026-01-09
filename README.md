@@ -16,7 +16,7 @@ The next-generation Minecraft: Bedrock Edition server software aims to be reliab
 [![server](https://img.shields.io/maven-central/v/io.github.allayplus/server?label=server)](https://central.sonatype.com/artifact/io.github.allayplus/server)
 [![codecov](https://codecov.io/gh/AllayPlus/AllayPlus/graph/badge.svg?token=TQVZ3XBJXC)](https://codecov.io/gh/AllayPlus/AllayPlus)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/87c025f71e9549b9a4f2ab36a56b5cf9)](https://app.codacy.com/gh/AllayPlus/AllayPlus/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-<a href="https://discord.gg/djSKn43EWm"><img src="https://img.shields.io/discord/1147136608290750526?label=discord&color=7289DA&logo=discord" alt="Discord" /></a>
+<a href="https://discord.gg/djSKn43EWm"><img src="https://img.shields.io/discord/1455284486685331518?label=discord&color=7289DA&logo=discord" alt="Discord" /></a>
 <a href="https://feedback.minecraft.net/hc/en-us/sections/360001186971-Release-Changelogs"><img src="https://img.shields.io/badge/minecraft-1.21.80 ~ 1.21.130%20(Bedrock)-green" /></a>
 [![GitHub License](https://img.shields.io/github/license/AllayPlus/AllayPlus)](LICENSE)
 [![Ko-Fi](https://img.shields.io/badge/Buy_Me_a_Coffee-f37574?logo=kofi&logoColor=white)](https://ko-fi.com/AllayMC)
