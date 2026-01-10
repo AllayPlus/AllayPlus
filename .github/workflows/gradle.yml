@@ -92,26 +92,44 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SONATYPE_SECRET_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SONATYPE_SECRET_KEY_PASSWORD }}
 
-      - name: Set Tag
+      - name: Set Dev Tag
         if: success() && github.event_name == 'push' && github.repository == 'AllayPlus/AllayPlus' && contains(github.ref_name, 'master')
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           if [ -z "$GH_PAT" ]; then
-            echo "GH_PAT is missing; cannot push nightly tag."
+            echo "GH_PAT is missing; cannot push dev tag."
             exit 1
           fi
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git tag -f -a nightly -m "Nightly build"
-          git push https://x-access-token:${GH_PAT}@github.com/AllayPlus/AllayPlus.git -f --follow-tags nightly
+          git tag -f -a dev -m "Dev build"
+          git push https://x-access-token:${GH_PAT}@github.com/AllayPlus/AllayPlus.git -f --follow-tags dev
 
-      - name: Update Nightly Build
-        uses: AllayPlus/deploy-nightly@master
+      - name: Resolve Dev Release
+        id: dev_release
         if: success() && github.event_name == 'push' && github.repository == 'AllayPlus/AllayPlus' && contains(github.ref_name, 'master')
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          if [ -z "$GH_PAT" ]; then
+            echo "GH_PAT is missing; cannot resolve dev release."
+            exit 1
+          fi
+          response=$(curl -s \
+            -H "Authorization: token ${GH_PAT}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/dev")
+          printf '%s' "$response" | python -c 'import json, os, sys; data = json.load(sys.stdin); out = open(os.environ["GITHUB_OUTPUT"], "a"); \
+if "id" in data: out.write(f"found=true\\nrelease_id={data[\"id\"]}\\nupload_url={data[\"upload_url\"]}\\n"); \
+else: out.write("found=false\\n")'
+
+      - name: Update Dev Build
+        uses: AllayPlus/deploy-nightly@master
+        if: success() && github.event_name == 'push' && github.repository == 'AllayPlus/AllayPlus' && contains(github.ref_name, 'master') && steps.dev_release.outputs.found == 'true'
         with:
-          upload_url: https://uploads.github.com/repos/AllayPlus/AllayPlus/releases/275703886/assets{?name,label}
-          release_id: 275703886
+          upload_url: ${{ steps.dev_release.outputs.upload_url }}
+          release_id: ${{ steps.dev_release.outputs.release_id }}
           asset_path: ./${{ steps.vars.outputs.shaded_jar_path }}
           asset_name: ${{ steps.vars.outputs.shaded_jar_name }}
           old_asset_name: allayplus-server-$$-shaded.jar
