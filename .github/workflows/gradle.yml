@@ -110,8 +110,8 @@ jobs:
         uses: AllayPlus/deploy-nightly@master
         if: success() && github.event_name == 'push' && github.repository == 'AllayPlus/AllayPlus' && contains(github.ref_name, 'master')
         with:
-          upload_url: https://uploads.github.com/repos/AllayPlus/AllayPlus/releases/273093543/assets{?name,label}
-          release_id: 273093543
+          upload_url: https://uploads.github.com/repos/AllayPlus/AllayPlus/releases/275703886/assets{?name,label}
+          release_id: 275703886
           asset_path: ./${{ steps.vars.outputs.shaded_jar_path }}
           asset_name: ${{ steps.vars.outputs.shaded_jar_name }}
           old_asset_name: allayplus-server-$$-shaded.jar
