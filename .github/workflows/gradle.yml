@@ -92,26 +92,26 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SONATYPE_SECRET_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SONATYPE_SECRET_KEY_PASSWORD }}
 
-      - name: Set Tag
+      - name: Set Snapshot Tag
         if: success() && github.event_name == 'push' && github.repository == 'AllayPlus/AllayPlus' && contains(github.ref_name, 'master')
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           if [ -z "$GH_PAT" ]; then
-            echo "GH_PAT is missing; cannot push dev tag."
+            echo "GH_PAT is missing; cannot push snapshot tag."
             exit 1
           fi
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git tag -f -a dev -m "Dev build"
-          git push https://x-access-token:${GH_PAT}@github.com/AllayPlus/AllayPlus.git -f --follow-tags dev
+          git tag -f -a 0.1.1-snapshot -m "Snapshot build"
+          git push https://x-access-token:${GH_PAT}@github.com/AllayPlus/AllayPlus.git -f --follow-tags 0.1.1-snapshot
 
-      - name: Update Dev Build
+      - name: Update Snapshot Build
         uses: AllayPlus/deploy-nightly@master
         if: success() && github.event_name == 'push' && github.repository == 'AllayPlus/AllayPlus' && contains(github.ref_name, 'master')
         with:
-          upload_url: https://uploads.github.com/repos/AllayPlus/AllayPlus/releases/275703886/assets{?name,label}
-          release_id: 275703886
+          upload_url: https://uploads.github.com/repos/AllayPlus/AllayPlus/releases/275714082/assets{?name,label}
+          release_id: 275714082
           asset_path: ./${{ steps.vars.outputs.shaded_jar_path }}
           asset_name: ${{ steps.vars.outputs.shaded_jar_name }}
           old_asset_name: allayplus-server-$$-shaded.jar
