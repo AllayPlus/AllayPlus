@@ -1,4 +1,4 @@
-# Code of Conduct - Allay
+# Code of Conduct - AllayPlus
 
 ## Our Pledge
 
