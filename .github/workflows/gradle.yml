@@ -106,41 +106,17 @@ jobs:
           git tag -f -a nightly -m "Nightly build"
           git push https://x-access-token:${GH_PAT}@github.com/AllayPlus/AllayPlus.git -f --follow-tags nightly
 
-      - name: Delete Nightly Release
-        uses: actions/github-script@v7
+      - name: Update Nightly Build
+        uses: AllayPlus/deploy-nightly@master
         if: success() && github.event_name == 'push' && github.repository == 'AllayPlus/AllayPlus' && contains(github.ref_name, 'master')
         with:
-          github-token: ${{ secrets.GH_PAT }}
-          script: |
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const tag = "nightly";
-            try {
-              const { data } = await github.rest.repos.getReleaseByTag({ owner, repo, tag });
-              await github.rest.repos.deleteRelease({ owner, repo, release_id: data.id });
-            } catch (error) {
-              if (error.status !== 404) throw error;
-            }
-
-      - name: Publish Nightly Release
-        uses: softprops/action-gh-release@v2
-        if: success() && github.event_name == 'push' && github.repository == 'AllayPlus/AllayPlus' && contains(github.ref_name, 'master')
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-        with:
-          tag_name: nightly
-          name: nightly
-          prerelease: true
-          body: |
-            This release represents the latest set of changes and features that are actively being developed for **AllayPlus**. It is generated automatically from the `master` branch and may contain experimental features, bug fixes, and other improvements that are still being tested.
-            ---
-            > [!IMPORTANT]
-            > This build is not recommended for production environments, as it may include unstable or incomplete functionality.
-            ---
-            > [!NOTE]
-            > 📦 Download: This build can be downloaded directly from the Assets section below.
-            > See [Installation](https://docs.allaymc.org/getting-started/installation/) for a detailed guide.
-          files: ${{ steps.vars.outputs.shaded_jar_path }}
+          upload_url: https://uploads.github.com/repos/AllayPlus/AllayPlus/releases/275703886/assets{?name,label}
+          release_id: 275703886
+          asset_path: ./${{ steps.vars.outputs.shaded_jar_path }}
+          asset_name: ${{ steps.vars.outputs.shaded_jar_name }}
+          old_asset_name: allayplus-server-$$-shaded.jar
+          asset_content_type: application/java-archive
+          max_releases: 1
 
       - name: Restart Test Server
         uses: fjogeleit/http-request-action@v1
