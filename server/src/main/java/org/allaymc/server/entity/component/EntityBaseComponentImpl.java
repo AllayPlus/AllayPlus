@@ -112,6 +112,9 @@ public class EntityBaseComponentImpl implements EntityBaseComponent {
     @Getter
     @Setter
     protected PermissionCalculator permissionCalculator;
+    @Getter
+    @Setter
+    protected boolean persistent = true;
     @Getter(onMethod_ = {@Override})
     protected Scheduler scheduler;
 
